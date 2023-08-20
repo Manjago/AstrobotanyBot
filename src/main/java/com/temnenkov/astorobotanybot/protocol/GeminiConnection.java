@@ -100,7 +100,7 @@ public class GeminiConnection extends URLConnection {
             KeyManagerFactory kmf = KeyManagerFactory.getInstance(algorithm);
             kmf.init(keyStore, keyPassphrase.toCharArray());
 
-            SSLContext sc = SSLContext.getInstance("SSL");
+            SSLContext sc = SSLContext.getInstance("TLS");
             sc.init(kmf.getKeyManagers(), TRUST_ALL_CERTS, new java.security.SecureRandom());
             sslSocket = (SSLSocket) sc.getSocketFactory().createSocket(host, port);
             SSLParameters params = new SSLParameters();
