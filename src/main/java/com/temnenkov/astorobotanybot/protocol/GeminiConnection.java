@@ -92,16 +92,13 @@ public class GeminiConnection extends URLConnection {
                 port = 1965;
             }
 
-            //todo properties file
-            final String keyPassphrase = "111111";
 
             KeyStore keyStore = KeyStore.getInstance("PKCS12");
-            //todo properties file
-            keyStore.load(new FileInputStream("/home/kirill/del/gemini.pfx"), keyPassphrase.toCharArray());
+            keyStore.load(new FileInputStream(pfxPath), key);
 
             String algorithm = KeyManagerFactory.getDefaultAlgorithm();
             KeyManagerFactory kmf = KeyManagerFactory.getInstance(algorithm);
-            kmf.init(keyStore, keyPassphrase.toCharArray());
+            kmf.init(keyStore, key);
 
             SSLContext sc = SSLContext.getInstance("TLS");
             sc.init(kmf.getKeyManagers(), TRUST_ALL_CERTS, new java.security.SecureRandom());

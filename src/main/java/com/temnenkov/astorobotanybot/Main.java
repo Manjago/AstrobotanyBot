@@ -63,17 +63,24 @@ public class Main {
                 return;
             }
 
-            doWork(rootUrl);
+            final String waterLimitString = config.getProperty("app.water.limit");
+            if (waterLimitString == null || waterLimitString.isBlank()) {
+                logger.log(Level.SEVERE, "app.water.limit not defined");
+                return;
+            }
+
+            doWork(rootUrl, Integer.parseInt(waterLimitString));
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Unexpected exception %s".formatted(e.getMessage()), e);
         }
     }
 
-    private static void doWork(String rootUrl) {
+    private static void doWork(String rootUrl, int waterLimit) {
         final var plant = new MyPlant(rootUrl).load();
         final int waterQty = plant.waterQty();
-        if (waterQty < 95) {
+        if (waterQty < waterLimit) {
             plant.doWater();
         }
+        plant.doSnakeLeaves();
     }
 }

@@ -63,6 +63,15 @@ public class Plant {
             // do nothing
         }
     }
+    public void doSnakeLeaves() {
+        try {
+            GeminiContentLoader.loadGeminiContent(new URL(rootUrl + url + "/shake"));
+        } catch (MalformedURLException e) {
+            throw new GeminiPanicException(e);
+        } catch (RedirectedException e) {
+            // do nothing
+        }
+    }
 
 
     private void check() {
