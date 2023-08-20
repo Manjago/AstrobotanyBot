@@ -1,18 +1,17 @@
 package com.temnenkov.astorobotanybot.protocol.exception;
 
+import lombok.Getter;
+
 import java.net.URL;
 
-public class RedirectedException extends GeminiException
-  {
-  URL url;
+@Getter
+public class RedirectedException extends GeminiException {
+    final URL url;
 
-  public RedirectedException(URL url)
-    {
-    super ("Redirected to " + url.toString());
-    this.url = url;
+    public RedirectedException(URL url) {
+        super("Redirected to " + url.toString());
+        this.url = url;
     }
-
-  public URL getURL() { return url; }
-  }
+}
 
 
