@@ -1,44 +1,79 @@
 package com.temnenkov.astorobotanybot;
 
-import com.temnenkov.astorobotanybot.business.Plant;
-import com.temnenkov.astorobotanybot.protocol.GeminiContentLoader;
+import com.temnenkov.astorobotanybot.business.MyPlant;
 import com.temnenkov.astorobotanybot.protocol.GeminiURLStreamHandlerFactory;
 
-import java.net.MalformedURLException;
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.URL;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Main {
     private static final Logger logger = Logger.getLogger(Main.class.getName());
 
-
     public static void main(String[] args) {
-        try{
-            URL.setURLStreamHandlerFactory (new GeminiURLStreamHandlerFactory());
-            final var plant = new Plant("gemini://astrobotany.mozz.us/app/visit/681e29e57c88440db684a72e38bb041b").load();
-            final int waterQty = plant.waterQty();
-            System.out.println("before: " + waterQty);
-            if (waterQty < 75) {
-                plant.doWater();
+
+        try {
+            if (args.length < 1) {
+                logger.severe("Need properties file in argument");
+                return;
             }
-            final int waterQtyAfter = plant.load().waterQty();
-            System.out.println("after: " + waterQtyAfter);
+            if (logger.isLoggable(Level.FINE)) {
+                logger.fine("Loading properties from %s".formatted(args[0]));
+            }
+
+            final var config = new Properties();
+            try (final var is = new FileInputStream(args[0])) {
+                config.load(is);
+            } catch (Exception e) {
+                logger.log(Level.SEVERE, "Fail loading properties from %s".formatted(args[0]), e);
+                return;
+            }
+
+            final String pfxPath = config.getProperty("auth.pfx.path");
+            if (pfxPath == null) {
+                logger.log(Level.SEVERE, "auth.pfx.path not defined");
+                return;
+            }
+
+            final File f = new File(pfxPath);
+            if(!f.exists()) {
+                logger.log(Level.SEVERE, "%s not exist".formatted(pfxPath));
+                return;
+            }
+            if(f.isDirectory()) {
+                logger.log(Level.SEVERE, "%s is directory".formatted(pfxPath));
+                return;
+            }
+
+            if (config.getProperty("auth.key") == null || config.getProperty("auth.key").isBlank()) {
+                logger.log(Level.SEVERE, "auth.key not defined");
+                return;
+            }
+
+            final char[] key = config.getProperty("auth.key").toCharArray();
+
+            URL.setURLStreamHandlerFactory (new GeminiURLStreamHandlerFactory(pfxPath, key));
+
+            final String rootUrl = config.getProperty("root.url");
+            if (rootUrl == null || rootUrl.isBlank()) {
+                logger.log(Level.SEVERE, "root.url not defined");
+                return;
+            }
+
+            doWork(rootUrl);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Unexpected exception %s".formatted(e.getMessage()), e);
         }
     }
 
-    public static void tost() throws MalformedURLException {
-        URL.setURLStreamHandlerFactory (new GeminiURLStreamHandlerFactory());
-        final var geminiContent = GeminiContentLoader.loadGeminiContent(new URL("gemini://astrobotany.mozz.us/app/plant"));
-        if (geminiContent.getException() != null) {
-            System.out.println("Exception happens " + geminiContent.getException());
-            logger.log(Level.SEVERE, "wow", geminiContent.getException());
+    private static void doWork(String rootUrl) {
+        final var plant = new MyPlant(rootUrl).load();
+        final int waterQty = plant.waterQty();
+        if (waterQty < 95) {
+            plant.doWater();
         }
-        if (geminiContent.getContent() != null) {
-            System.out.println(new String(geminiContent.getContent()));
-        }
-
     }
 }

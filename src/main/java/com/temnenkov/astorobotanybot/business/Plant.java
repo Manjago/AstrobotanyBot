@@ -10,17 +10,19 @@ import java.net.URL;
 
 public class Plant {
 
+    private final String rootUrl;
     private final String url;
 
     private GeminiContent geminiContent;
 
-    public Plant(String url) {
+    public Plant(String rootUrl, String url) {
+        this.rootUrl = rootUrl;
         this.url = url;
     }
 
     public Plant load() {
         try {
-            geminiContent = GeminiContentLoader.loadGeminiContent(new URL(url));
+            geminiContent = GeminiContentLoader.loadGeminiContent(new URL(rootUrl + url));
             return this;
         } catch (MalformedURLException e) {
             throw new GeminiPanicException(e);
@@ -54,7 +56,7 @@ public class Plant {
 
     public void doWater() {
         try {
-            GeminiContentLoader.loadGeminiContent(new URL(url + "/water"));
+            GeminiContentLoader.loadGeminiContent(new URL(rootUrl + url + "/water"));
         } catch (MalformedURLException e) {
             throw new GeminiPanicException(e);
         } catch (RedirectedException e) {

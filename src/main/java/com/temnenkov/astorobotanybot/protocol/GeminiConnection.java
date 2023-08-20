@@ -54,9 +54,13 @@ public class GeminiConnection extends URLConnection {
     private byte[] content;
     @Getter
     private String contentType = null;
+    private final String pfxPath;
+    private final char[] key;
 
-    protected GeminiConnection(URL url) {
+    protected GeminiConnection(URL url, String pfxPath, char[] key) {
         super(url);
+        this.pfxPath = pfxPath;
+        this.key = key;
     }
 
     private static int parseStatus(String line) {
