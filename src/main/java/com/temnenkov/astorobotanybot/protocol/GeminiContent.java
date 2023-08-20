@@ -14,4 +14,14 @@ public class GeminiContent {
     private byte[] content;
     private String mime;
     private Exception exception;
+
+    public String display() {
+        if (exception != null) {
+            return "Exception: " + exception;
+        } else if (content == null) {
+            return "Empty content";
+        } else {
+            return new String(content);
+        }
+    }
 }

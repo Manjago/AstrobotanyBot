@@ -33,13 +33,6 @@ import java.security.cert.X509Certificate;
 import java.util.Collections;
 
 public class GeminiConnection extends URLConnection {
-    private SSLSocket sslSocket;
-    private InputStream inputStream;
-    private String meta;
-    private byte[] content;
-    @Getter
-    private String contentType = null;
-
     private static final TrustManager[] TRUST_ALL_CERTS = new TrustManager[]
             {new X509TrustManager() {
                 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
@@ -55,6 +48,12 @@ public class GeminiConnection extends URLConnection {
                 }
             }
             };
+    private SSLSocket sslSocket;
+    private InputStream inputStream;
+    private String meta;
+    private byte[] content;
+    @Getter
+    private String contentType = null;
 
     protected GeminiConnection(URL url) {
         super(url);
@@ -118,7 +117,7 @@ public class GeminiConnection extends URLConnection {
             do {
                 final int readChar = inputStream.read();
                 final char c = (char) readChar;
-                if ((readChar == -1) || (c == '\n')){
+                if ((readChar == -1) || (c == '\n')) {
                     break;
                 }
                 if (c != '\r') {
@@ -143,7 +142,7 @@ public class GeminiConnection extends URLConnection {
                 } else if (status < 20) {
                     throw new RetryWithInputException(getURL(), status == 11, meta);
                 } else if (status < 40) {
-                    throw new RedirectedException(new URL(meta));
+                    throw new RedirectedException(meta);
                 } else {
                     throw new ErrorResponseException(getURL(), status, meta);
                 }
@@ -163,17 +162,18 @@ public class GeminiConnection extends URLConnection {
         }
         try {
             connect();
-
             contentType = meta;
             content = queryContent();
-            sslSocket.close();
-            sslSocket = null;
-
             return content;
         } catch (IOException e) {
             throw e;
         } catch (Exception e) {
             throw new IOException(e);
+        } finally {
+            if (sslSocket != null) {
+                sslSocket.close();
+                sslSocket = null;
+            }
         }
     }
 
