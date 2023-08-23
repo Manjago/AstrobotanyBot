@@ -8,4 +8,8 @@ public class GeminiPanicException extends GeminiException {
     public GeminiPanicException(String message) {
         super(message);
     }
+
+    public GeminiPanicException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

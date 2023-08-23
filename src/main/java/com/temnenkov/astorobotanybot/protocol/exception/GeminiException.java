@@ -8,4 +8,8 @@ public class GeminiException extends RuntimeException {
     public GeminiException(Throwable cause) {
         super(cause);
     }
+
+    public GeminiException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

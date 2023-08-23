@@ -8,8 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @UtilityClass
-public class WaterScript {
-    private static final Logger logger = Logger.getLogger(WaterScript.class.getName());
+public class WaterMeScript {
+    private static final Logger logger = Logger.getLogger(WaterMeScript.class.getName());
     public static void invoke(@NotNull Plant plant, int waterLimit) {
         final int waterQty = plant.waterQty();
         if (waterQty < waterLimit) {

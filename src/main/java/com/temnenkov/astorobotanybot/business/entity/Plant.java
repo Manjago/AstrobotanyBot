@@ -1,6 +1,5 @@
 package com.temnenkov.astorobotanybot.business.entity;
 
-import com.temnenkov.astorobotanybot.protocol.GeminiContent;
 import com.temnenkov.astorobotanybot.protocol.GeminiContentLoader;
 import com.temnenkov.astorobotanybot.protocol.exception.GeminiPanicException;
 import com.temnenkov.astorobotanybot.protocol.exception.RedirectedException;
@@ -8,12 +7,10 @@ import com.temnenkov.astorobotanybot.protocol.exception.RedirectedException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Plant {
+public class Plant extends GeminiAwaredEntity{
 
     private final String rootUrl;
     private final String url;
-
-    private GeminiContent geminiContent;
 
     public Plant(String rootUrl, String url) {
         this.rootUrl = rootUrl;
@@ -21,12 +18,8 @@ public class Plant {
     }
 
     public Plant load() {
-        try {
-            geminiContent = GeminiContentLoader.loadGeminiContent(new URL(rootUrl + url));
-            return this;
-        } catch (MalformedURLException e) {
-            throw new GeminiPanicException(e);
-        }
+        loadGemini(rootUrl + url);
+        return this;
     }
 
     public int waterQty() {
@@ -70,19 +63,6 @@ public class Plant {
             throw new GeminiPanicException(e);
         } catch (RedirectedException e) {
             // do nothing
-        }
-    }
-
-
-    private void check() {
-        if (geminiContent == null) {
-            throw new GeminiPanicException("Gemini not loaded");
-        }
-        if (geminiContent.getException() != null) {
-            throw new GeminiPanicException(geminiContent.getException());
-        }
-        if (geminiContent.getContent() == null) {
-            throw new GeminiPanicException("Empty gemini content");
         }
     }
 

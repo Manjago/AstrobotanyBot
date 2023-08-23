@@ -2,7 +2,8 @@ package com.temnenkov.astorobotanybot;
 
 import com.temnenkov.astorobotanybot.business.entity.MyPlant;
 import com.temnenkov.astorobotanybot.business.script.ShakeLivesScript;
-import com.temnenkov.astorobotanybot.business.script.WaterScript;
+import com.temnenkov.astorobotanybot.business.script.WaterMeScript;
+import com.temnenkov.astorobotanybot.business.script.WaterOthersScript;
 import com.temnenkov.astorobotanybot.protocol.GeminiURLStreamHandlerFactory;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,8 +32,10 @@ public class Main {
 
             final var plant = new MyPlant(rootUrl).load();
 
-            WaterScript.invoke(plant, Integer.parseInt(waterLimitString));
+            WaterMeScript.invoke(plant, Integer.parseInt(waterLimitString));
             ShakeLivesScript.invoke(plant, Boolean.parseBoolean(appShakeLives));
+
+            WaterOthersScript.invoke(rootUrl);
         } catch (InitException e) {
             logger.log(Level.SEVERE, () -> "Death on start: %s".formatted(e.getMessage()));
         }  catch (Exception e) {
