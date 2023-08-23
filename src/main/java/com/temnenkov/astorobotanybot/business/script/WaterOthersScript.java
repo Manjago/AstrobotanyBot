@@ -12,14 +12,14 @@ import java.util.logging.Logger;
 public class WaterOthersScript {
     private static final Logger logger = Logger.getLogger(WaterOthersScript.class.getName());
 
-    public void invoke(@NotNull String rootUrl) {
-        final var foreignPlants = new WiltingPlants(rootUrl).load();
-        if (foreignPlants.doWater()) {
+    public void invoke(@NotNull String rootUrl, int waterLimit) {
+        final var wiltingPlants = new WiltingPlants(rootUrl, waterLimit).load();
+        if (wiltingPlants.doWater()) {
             logger.log(Level.INFO, "Foreign wilting plant watered");
             return;
         }
 
-        final var dryPlants = new DryPlants(rootUrl).load();
+        final var dryPlants = new DryPlants(rootUrl, waterLimit).load();
         if (dryPlants.doWater()) {
             logger.log(Level.INFO, "Foreign dry plant watered");
             return;

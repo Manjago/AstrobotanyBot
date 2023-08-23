@@ -5,12 +5,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.logging.Logger;
 
 
 @UtilityClass
 public class GeminiContentLoader {
-    private static final Logger logger = Logger.getLogger(GeminiContentLoader.class.getName());
 
     public static GeminiContent loadGeminiContent(@NotNull URL url) {
         final var geminiContent = new GeminiContent(url);
