@@ -1,4 +1,4 @@
-package com.temnenkov.astorobotanybot.business;
+package com.temnenkov.astorobotanybot.business.entity;
 
 public class MyPlant extends Plant {
     public MyPlant(String rootUrl) {

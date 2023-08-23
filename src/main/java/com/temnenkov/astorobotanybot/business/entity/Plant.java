@@ -1,4 +1,4 @@
-package com.temnenkov.astorobotanybot.business;
+package com.temnenkov.astorobotanybot.business.entity;
 
 import com.temnenkov.astorobotanybot.protocol.GeminiContent;
 import com.temnenkov.astorobotanybot.protocol.GeminiContentLoader;
