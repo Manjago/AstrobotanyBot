@@ -10,7 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
-public class Plant extends GeminiAwaredEntity {
+public class Plant extends GeminiAwareEntity {
 
     private final String rootUrl;
     @Getter

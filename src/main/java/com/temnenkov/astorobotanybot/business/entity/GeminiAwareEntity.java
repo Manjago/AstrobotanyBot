@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public abstract class GeminiAwaredEntity {
+public abstract class GeminiAwareEntity {
     protected GeminiContent geminiContent;
 
     protected void loadGemini(@NotNull String fullUrl) {
