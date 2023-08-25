@@ -59,7 +59,7 @@ public class Main {
 
         final var nextMeWateringAndShake = new NextMeWateringAndShake(database);
         final var allowedWaterMe = nextMeWateringAndShake.allowed();
-        logger.log(Level.INFO, "Check timer for water me: %s".formatted(allowed));
+        logger.log(Level.INFO, "Check timer for water me: %s".formatted(allowedWaterMe));
         if (allowedWaterMe.passed()) {
             final var plant = new MyPlant(rootUrl).load();
 
