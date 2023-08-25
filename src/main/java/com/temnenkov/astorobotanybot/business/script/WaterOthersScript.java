@@ -23,6 +23,7 @@ public class WaterOthersScript {
         if (nextWatering != null) {
             if (now.isBefore(nextWatering)) {
                 logger.log(Level.FINEST, () -> "Now " + now + ", nextTime " + nextWatering + " no foreign watering");
+                return;
             }
         }
         logger.log(Level.INFO, () -> "Now " + now + ", nextTime " + nextWatering + " do foreign watering");

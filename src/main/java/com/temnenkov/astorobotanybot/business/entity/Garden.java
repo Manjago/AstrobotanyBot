@@ -61,8 +61,16 @@ public class Garden extends GeminiAwareEntity {
     private WateringResult doWater(@NotNull List<Info> infos) {
         for (Info info : infos) {
             if (info.waterQty < waterLimit) {
+                var oldWaterQty = info.waterQty;
                 info.plant.doWater();
-                logger.log(Level.INFO, () -> "%s %s plant %s with waterQty %d watered".formatted(info.stage, type, info.plant.getUrl(), info.waterQty));
+                logger.log(Level.INFO, () -> "%s %s plant %s with waterQty %d watered".formatted(info.stage, type, info.plant.getUrl(), oldWaterQty));
+
+                info.plant.load();
+                int newWaterQty = info.plant.waterQty();
+                if (newWaterQty == oldWaterQty) {
+                    return WateringResult.TOO_EARLY;
+                }
+
                 return WateringResult.WATERED;
             }
         }
