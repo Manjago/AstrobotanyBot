@@ -27,23 +27,33 @@ public class DbStore<K, V> {
     public DbStore(@NotNull File log) {
         this.log = log;
 
-        try (Stream<String> stream = Files.lines(log.toPath())) {
-            stream.forEach(s -> {
-                final String[] cmdKeyValue = s.split(" ");
-                switch (cmdKeyValue[0]) {
-                    case "PUT" -> {
-                        final K key = deserialize(cmdKeyValue[1]);
-                        final V value = deserialize(cmdKeyValue[2]);
-                        map.put(key, value);
+        if (log.exists()) {
+            try (Stream<String> stream = Files.lines(log.toPath())) {
+                stream.forEach(s -> {
+                    final String[] cmdKeyValue = s.split(" ");
+                    switch (cmdKeyValue[0]) {
+                        case "PUT" -> {
+                            final K key = deserialize(cmdKeyValue[1]);
+                            final V value = deserialize(cmdKeyValue[2]);
+                            map.put(key, value);
+                        }
+                        case "REM" -> {
+                            final K key = deserialize(cmdKeyValue[1]);
+                            map.remove(key);
+                        }
                     }
-                    case "REM" -> {
-                        final K key = deserialize(cmdKeyValue[1]);
-                        map.remove(key);
-                    }
+                });
+            } catch (IOException e) {
+                throw new DbPanicException(e);
+            }
+        } else {
+            try {
+                if (!log.createNewFile()) {
+                    throw new DbPanicException("Fail create file " + log);
                 }
-            });
-        } catch (IOException e) {
-            throw new DbPanicException(e);
+            } catch (IOException e) {
+                throw new DbPanicException(e);
+            }
         }
     }
 
@@ -107,6 +117,10 @@ public class DbStore<K, V> {
     public static class DbPanicException extends RuntimeException {
         public DbPanicException(Throwable cause) {
             super(cause);
+        }
+
+        public DbPanicException(String message) {
+            super(message);
         }
     }
 }
