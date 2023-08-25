@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.Base64;
 import java.util.HashMap;
@@ -78,6 +79,19 @@ public class DbStore<K, V> {
             final String dbString = "REM " + serializedKey + "\n";
             appendLine(dbString);
             map.remove(key);
+        }
+    }
+
+    public void compress() {
+        try {
+            final File temp = File.createTempFile("astobotany", ".txt");
+            final var tempStore = new DbStore<K, V>(temp);
+            map.forEach(tempStore::put);
+
+            Files.move(temp.toPath(), log.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+
+        } catch (IOException e) {
+            throw new DbPanicException(e);
         }
     }
 
