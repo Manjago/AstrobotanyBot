@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Config {
-    private static final Logger logger = Logger.getLogger(Config.class.getName());
+    private static final Logger logger = Logger.getLogger("Config");
     private final Properties properties = new Properties();
 
 

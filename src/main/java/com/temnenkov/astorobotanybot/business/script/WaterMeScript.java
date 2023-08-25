@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 @UtilityClass
 public class WaterMeScript {
-    private static final Logger logger = Logger.getLogger(WaterMeScript.class.getName());
+    private static final Logger logger = Logger.getLogger("WaterMeScript");
     public static void invoke(@NotNull Plant plant, int waterLimit) {
         final int waterQty = plant.waterQty();
         if (waterQty < waterLimit) {

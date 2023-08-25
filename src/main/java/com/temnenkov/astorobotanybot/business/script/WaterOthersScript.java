@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 @UtilityClass
 public class WaterOthersScript {
-    private static final Logger logger = Logger.getLogger(WaterOthersScript.class.getName());
+    private static final Logger logger = Logger.getLogger("WaterOthersScript");
 
     public void invoke(@NotNull String rootUrl, int waterLimit) {
         final var wiltingPlants = new WiltingPlants(rootUrl, waterLimit).load();

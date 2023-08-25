@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Garden extends GeminiAwareEntity {
-    private static final Logger logger = Logger.getLogger(Garden.class.getName());
+    private static final Logger logger = Logger.getLogger("Garden");
     private final String rootUrl;
     private final String url;
     private final int waterLimit;

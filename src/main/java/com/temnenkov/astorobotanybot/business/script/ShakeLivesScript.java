@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 @UtilityClass
 public class ShakeLivesScript {
-    private static final Logger logger = Logger.getLogger(ShakeLivesScript.class.getName());
+    private static final Logger logger = Logger.getLogger("ShakeLivesScript");
     public static void invoke(@NotNull Plant plant, boolean needShakeLives) {
         if (needShakeLives) {
             plant.doSnakeLeaves();
