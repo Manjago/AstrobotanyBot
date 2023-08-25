@@ -38,14 +38,17 @@ public class Main {
     }
 
     private void doWorkAndExit(String[] args) {
+        logger.log(Level.INFO, "--- Start ---");
         final FileLock preventGC = checkSecondInstance();
-        logger.log(Level.FINEST, () -> "Obtain lock %s".formatted(preventGC));
+        logger.log(Level.INFO, () -> "Obtain lock %s".formatted(preventGC));
 
         final Config config = getConfig(args);
 
         final DbStore<String, Serializable> database = new DbStore<>(new File(config.getConfigParameter("app.db.file")));
         final var nextCompress = new NextCompress(database);
-        if (nextCompress.allowed().passed()) {
+        final var allowed = nextCompress.allowed();
+        logger.log(Level.INFO, "Check timer for compress: %s".formatted(allowed));
+        if (allowed.passed()) {
             database.compress();
             nextCompress.storeNext(Instant.now().plus(1, ChronoUnit.DAYS));
         }
@@ -55,7 +58,9 @@ public class Main {
         final String rootUrl = config.getConfigParameter("root.url");
 
         final var nextMeWateringAndShake = new NextMeWateringAndShake(database);
-        if (nextMeWateringAndShake.allowed().passed()) {
+        final var allowedWaterMe = nextMeWateringAndShake.allowed();
+        logger.log(Level.INFO, "Check timer for water me: %s".formatted(allowed));
+        if (allowedWaterMe.passed()) {
             final var plant = new MyPlant(rootUrl).load();
 
             new WaterMeScript().invoke(plant, Integer.parseInt(config.getConfigParameter("app.water.limit")));
@@ -65,7 +70,7 @@ public class Main {
 
         new WaterOthersScript(new NextForeignWatering(database)).invoke(rootUrl, Integer.parseInt(config.getConfigParameter("app.foreign.water.limit")));
         // to prevent garbage collection - still use
-        logger.log(Level.FINEST, () -> "Exit, released lock %s".formatted(preventGC));
+        logger.log(Level.INFO, () -> "Exit, released lock %s".formatted(preventGC));
     }
 
     private void initTLS(@NotNull Config config) {
