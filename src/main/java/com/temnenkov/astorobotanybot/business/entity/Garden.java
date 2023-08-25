@@ -15,6 +15,8 @@ public class Garden extends GeminiAwareEntity {
     private final String url;
     private final int waterLimit;
     private final String type;
+    private final Stage[] ORDER = {Stage.FLOWERING, Stage.MATURE, Stage.YOUNG,
+            Stage.SEEDLING, Stage.SEED, Stage.SEED_BEARING};
 
     public Garden(String rootUrl, String url, int waterLimit, String type) {
         this.rootUrl = rootUrl;
@@ -28,7 +30,7 @@ public class Garden extends GeminiAwareEntity {
         return this;
     }
 
-    public boolean doWater() {
+    public WateringResult doWater() {
         check();
         final String[] lines = geminiContent.display().split("\\r?\\n");
         final List<String> urls = Arrays.stream(lines).filter(s -> s.startsWith("=>/app/visit/")).map(s -> {
@@ -41,34 +43,30 @@ public class Garden extends GeminiAwareEntity {
 
         if (urls.isEmpty()) {
             logger.log(Level.INFO, () -> "No found plants for watering: %s".formatted(url));
-            return false;
+            return WateringResult.NOT_FOUND;
         }
 
         final List<Info> infos = infoByUrls(urls);
-        if (doWater(byStage(infos, Stage.FLOWERING))) {
-            return true;
-        } else if (doWater(byStage(infos, Stage.MATURE))) {
-            return true;
-        } else if (doWater(byStage(infos, Stage.YOUNG))) {
-            return true;
-        } else if (doWater(byStage(infos, Stage.SEEDLING))) {
-            return true;
-        } else if (doWater(byStage(infos, Stage.SEED))) {
-            return true;
-        } else {
-            return doWater(byStage(infos, Stage.SEED_BEARING));
+
+        for(Stage stage : ORDER) {
+           final WateringResult result = doWater(byStage(infos, stage));
+           if (result.isTerminal()) {
+               return result;
+           }
         }
+
+        return WateringResult.NOT_FOUND;
     }
 
-    private boolean doWater(@NotNull List<Info> infos) {
+    private WateringResult doWater(@NotNull List<Info> infos) {
         for (Info info : infos) {
             if (info.waterQty < waterLimit) {
                 info.plant.doWater();
                 logger.log(Level.INFO, () -> "%s %s plant %s with waterQty %d watered".formatted(info.stage, type, info.plant.getUrl(), info.waterQty));
-                return true;
+                return WateringResult.WATERED;
             }
         }
-        return false;
+        return WateringResult.NOT_FOUND;
     }
 
     @NotNull
@@ -94,4 +92,5 @@ public class Garden extends GeminiAwareEntity {
 
     private record Info(Plant plant, int waterQty, Stage stage) {
     }
+
 }

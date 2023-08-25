@@ -1,5 +1,6 @@
 package com.temnenkov.astorobotanybot;
 
+import com.temnenkov.astorobotanybot.business.dbaware.NextForeignWatering;
 import com.temnenkov.astorobotanybot.business.entity.MyPlant;
 import com.temnenkov.astorobotanybot.business.script.ShakeLivesScript;
 import com.temnenkov.astorobotanybot.business.script.WaterMeScript;
@@ -49,7 +50,7 @@ public class Main {
         new WaterMeScript().invoke(plant, Integer.parseInt(config.getConfigParameter("app.water.limit")));
         new ShakeLivesScript().invoke(plant, Boolean.parseBoolean(config.getConfigParameter("app.shake.leaves")));
 
-        new WaterOthersScript().invoke(rootUrl, Integer.parseInt(config.getConfigParameter("app.foreign.water.limit")));
+        new WaterOthersScript(new NextForeignWatering(database)).invoke(rootUrl, Integer.parseInt(config.getConfigParameter("app.foreign.water.limit")));
         // to prevent garbage collection - still use
         logger.log(Level.FINEST, () -> "Exit, released lock %s".formatted(preventGC));
     }
