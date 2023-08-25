@@ -2,13 +2,11 @@ package com.temnenkov.astorobotanybot.business.script;
 
 import com.temnenkov.astorobotanybot.business.entity.DryPlants;
 import com.temnenkov.astorobotanybot.business.entity.WiltingPlants;
-import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@UtilityClass
 public class WaterOthersScript {
     private static final Logger logger = Logger.getLogger("WaterOthersScript");
 

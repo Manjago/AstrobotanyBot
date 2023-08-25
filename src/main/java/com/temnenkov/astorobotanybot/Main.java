@@ -4,11 +4,13 @@ import com.temnenkov.astorobotanybot.business.entity.MyPlant;
 import com.temnenkov.astorobotanybot.business.script.ShakeLivesScript;
 import com.temnenkov.astorobotanybot.business.script.WaterMeScript;
 import com.temnenkov.astorobotanybot.business.script.WaterOthersScript;
+import com.temnenkov.astorobotanybot.db.DbStore;
 import com.temnenkov.astorobotanybot.protocol.GeminiURLStreamHandlerFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
@@ -18,25 +20,11 @@ import java.util.logging.Logger;
 
 public class Main {
     private static final Logger logger = Logger.getLogger("Main");
-    private static FileLock preventGC;
 
     public static void main(String[] args) {
 
         try {
-            preventGC = checkSecondInstance();
-
-            final Config config = getConfig(args);
-
-            initTLS(config);
-
-            final String rootUrl = config.getConfigParameter("root.url");
-
-            final var plant = new MyPlant(rootUrl).load();
-
-            WaterMeScript.invoke(plant, Integer.parseInt(config.getConfigParameter("app.water.limit")));
-            ShakeLivesScript.invoke(plant, Boolean.parseBoolean(config.getConfigParameter("app.shake.leaves")));
-
-            WaterOthersScript.invoke(rootUrl, Integer.parseInt(config.getConfigParameter("app.foreign.water.limit")));
+            new Main().doWorkAndExit(args);
         } catch (InitException e) {
             logger.log(Level.SEVERE, () -> "Death on start: %s".formatted(e.getMessage()));
         } catch (Exception e) {
@@ -44,7 +32,29 @@ public class Main {
         }
     }
 
-    private static void initTLS(@NotNull Config config) {
+    private void doWorkAndExit(String[] args) {
+        final FileLock preventGC = checkSecondInstance();
+        logger.log(Level.FINEST, () -> "Obtain lock %s".formatted(preventGC));
+
+        final Config config = getConfig(args);
+
+        final DbStore<String, Serializable> database = new DbStore<>(new File(config.getConfigParameter("app.db.file")));
+
+        initTLS(config);
+
+        final String rootUrl = config.getConfigParameter("root.url");
+
+        final var plant = new MyPlant(rootUrl).load();
+
+        new WaterMeScript().invoke(plant, Integer.parseInt(config.getConfigParameter("app.water.limit")));
+        new ShakeLivesScript().invoke(plant, Boolean.parseBoolean(config.getConfigParameter("app.shake.leaves")));
+
+        new WaterOthersScript().invoke(rootUrl, Integer.parseInt(config.getConfigParameter("app.foreign.water.limit")));
+        // to prevent garbage collection - still use
+        logger.log(Level.FINEST, () -> "Exit, released lock %s".formatted(preventGC));
+    }
+
+    private void initTLS(@NotNull Config config) {
         final String pfxPath = config.getProperty("auth.pfx.path");
         if (pfxPath == null) {
             throw new InitException("auth.pfx.path not defined");
@@ -70,7 +80,7 @@ public class Main {
     }
 
     @NotNull
-    private static Config getConfig(String @NotNull [] args) {
+    private Config getConfig(String @NotNull [] args) {
         if (args.length < 1) {
             throw new InitException("Need properties file in argument");
         }
@@ -80,7 +90,7 @@ public class Main {
         return config;
     }
 
-    private static @NotNull FileLock checkSecondInstance() {
+    private @NotNull FileLock checkSecondInstance() {
         final String userHome = System.getProperty("user.home");
         final File file = new File(userHome, "astrobotanybot.lock");
         try {
