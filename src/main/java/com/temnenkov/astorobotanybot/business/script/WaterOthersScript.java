@@ -1,6 +1,6 @@
 package com.temnenkov.astorobotanybot.business.script;
 
-import com.temnenkov.astorobotanybot.business.dbaware.NextForeignWatering;
+import com.temnenkov.astorobotanybot.business.dbaware.NextDate;
 import com.temnenkov.astorobotanybot.business.entity.DryPlants;
 import com.temnenkov.astorobotanybot.business.entity.WiltingPlants;
 import lombok.RequiredArgsConstructor;
@@ -14,19 +14,17 @@ import java.util.logging.Logger;
 @RequiredArgsConstructor
 public class WaterOthersScript {
     private static final Logger logger = Logger.getLogger("WaterOthersScript");
-    private final NextForeignWatering nextForeignWatering;
+    private final NextDate nextForeignWatering;
 
     public void invoke(@NotNull String rootUrl, int waterLimit) {
 
-        final Instant now = Instant.now();
-        final Instant nextWatering = nextForeignWatering.loadNext();
-        if (nextWatering != null) {
-            if (now.isBefore(nextWatering)) {
-                logger.log(Level.FINEST, () -> "Now " + now + ", nextTime " + nextWatering + " no foreign watering");
-                return;
-            }
+        final var allowed = nextForeignWatering.allowed();
+        if (!allowed.passed()) {
+            logger.log(Level.FINEST, () -> "Now %s, nextTime %s no foreign watering".formatted(allowed.now(), allowed.nextDate()));
+            return;
         }
-        logger.log(Level.INFO, () -> "Now " + now + ", nextTime " + nextWatering + " do foreign watering");
+
+        logger.log(Level.INFO, () -> "Now " + allowed.now() + ", nextTime " + allowed.nextDate() + " do foreign watering");
 
         final var wiltingPlants = new WiltingPlants(rootUrl, waterLimit).load();
 

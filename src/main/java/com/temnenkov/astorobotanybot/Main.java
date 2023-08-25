@@ -1,6 +1,8 @@
 package com.temnenkov.astorobotanybot;
 
+import com.temnenkov.astorobotanybot.business.dbaware.NextCompress;
 import com.temnenkov.astorobotanybot.business.dbaware.NextForeignWatering;
+import com.temnenkov.astorobotanybot.business.dbaware.NextMeWateringAndShake;
 import com.temnenkov.astorobotanybot.business.entity.MyPlant;
 import com.temnenkov.astorobotanybot.business.script.ShakeLivesScript;
 import com.temnenkov.astorobotanybot.business.script.WaterMeScript;
@@ -16,6 +18,8 @@ import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.file.StandardOpenOption;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,15 +44,24 @@ public class Main {
         final Config config = getConfig(args);
 
         final DbStore<String, Serializable> database = new DbStore<>(new File(config.getConfigParameter("app.db.file")));
+        final var nextCompress = new NextCompress(database);
+        if (nextCompress.allowed().passed()) {
+            database.compress();
+            nextCompress.storeNext(Instant.now().plus(1, ChronoUnit.DAYS));
+        }
 
         initTLS(config);
 
         final String rootUrl = config.getConfigParameter("root.url");
 
-        final var plant = new MyPlant(rootUrl).load();
+        final var nextMeWateringAndShake = new NextMeWateringAndShake(database);
+        if (nextMeWateringAndShake.allowed().passed()) {
+            final var plant = new MyPlant(rootUrl).load();
 
-        new WaterMeScript().invoke(plant, Integer.parseInt(config.getConfigParameter("app.water.limit")));
-        new ShakeLivesScript().invoke(plant, Boolean.parseBoolean(config.getConfigParameter("app.shake.leaves")));
+            new WaterMeScript().invoke(plant, Integer.parseInt(config.getConfigParameter("app.water.limit")));
+            new ShakeLivesScript().invoke(plant, Boolean.parseBoolean(config.getConfigParameter("app.shake.leaves")));
+            nextMeWateringAndShake.storeNext(Instant.now().plus(30, ChronoUnit.MINUTES));
+        }
 
         new WaterOthersScript(new NextForeignWatering(database)).invoke(rootUrl, Integer.parseInt(config.getConfigParameter("app.foreign.water.limit")));
         // to prevent garbage collection - still use

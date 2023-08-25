@@ -39,7 +39,8 @@ public class Garden extends GeminiAwareEntity {
                 return null;
             }
             return s.substring(3, space);
-        }).filter(Objects::nonNull).toList();
+        }).filter(Objects::nonNull).limit(5).toList(); //todo to config
+        //todo parse text from description
 
         if (urls.isEmpty()) {
             logger.log(Level.INFO, () -> "No found plants for watering: %s".formatted(url));
