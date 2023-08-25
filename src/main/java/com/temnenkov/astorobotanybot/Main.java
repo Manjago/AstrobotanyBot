@@ -8,16 +8,23 @@ import com.temnenkov.astorobotanybot.protocol.GeminiURLStreamHandlerFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.nio.file.StandardOpenOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Main {
     private static final Logger logger = Logger.getLogger(Main.class.getName());
+    private static FileLock preventGC;
 
     public static void main(String[] args) {
 
         try {
+            preventGC = checkSecondInstance();
+
             final Config config = getConfig(args);
 
             initTLS(config);
@@ -71,6 +78,24 @@ public class Main {
         final var config = new Config();
         config.load(args[0]);
         return config;
+    }
+
+    private static @NotNull FileLock checkSecondInstance() {
+        final String userHome = System.getProperty("user.home");
+        final File file = new File(userHome, "astrobotanybot.lock");
+        try {
+            FileChannel fc = FileChannel.open(file.toPath(),
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.WRITE);
+            FileLock lock = fc.tryLock();
+            if (lock == null) {
+                throw new InitException("another instance is running");
+            }
+            file.deleteOnExit();
+            return lock;
+        } catch (IOException e) {
+            throw new InitException("Fail check running instances");
+        }
     }
 
 }
