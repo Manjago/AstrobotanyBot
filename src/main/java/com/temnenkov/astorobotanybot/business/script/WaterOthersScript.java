@@ -19,6 +19,7 @@ public class WaterOthersScript {
     public void invoke(@NotNull String rootUrl, int waterLimit) {
 
         final var allowed = nextForeignWatering.allowed();
+        logger.log(Level.INFO, "Check timer for water other: %s".formatted(allowed));
         if (!allowed.passed()) {
             logger.log(Level.FINEST, () -> "Now %s, nextTime %s no foreign watering".formatted(allowed.now(), allowed.nextDate()));
             return;
