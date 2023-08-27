@@ -47,7 +47,7 @@ public class Garden extends GeminiAwareEntity {
             return WateringResult.NOT_FOUND;
         }
 
-        final List<Info> infos = infoByUrls(urls);
+        final List<Info> infos = infoByUrls(urls, true);
 
         for(Stage stage : ORDER) {
            final WateringResult result = doWater(byStage(infos, stage));
@@ -79,9 +79,12 @@ public class Garden extends GeminiAwareEntity {
     }
 
     @NotNull
-    private List<Info> infoByUrls(@NotNull List<String> urls) {
+    private List<Info> infoByUrls(@NotNull List<String> urls, boolean skipWithFence) {
         return urls.stream().map(purl -> {
             final var plant = new Plant(rootUrl, purl).load();
+            if (skipWithFence && plant.hasFence()) {
+                return null;
+            }
             final var waterQty = plant.waterQty();
             final String stageString = plant.stageString();
             final Stage stage = Stage.getStage(stageString);

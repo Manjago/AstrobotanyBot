@@ -51,6 +51,12 @@ public class Plant extends GeminiAwareEntity {
         return Integer.parseInt(sb.reverse().toString());
     }
 
+    public boolean hasFence() {
+        check();
+        final String s = new String(geminiContent.getContent());
+        return s.contains("fence :");
+    }
+
     public void doWater() {
         try {
             GeminiContentLoader.loadGeminiContent(new URL(rootUrl + url + "/water"));
