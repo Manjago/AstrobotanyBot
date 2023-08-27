@@ -1,0 +1,32 @@
+# Astrobotany - dziban's Garden
+
+=>/app/garden 🚶 Go back
+
+```
+
+              [38;5;29m/[0m[38;5;243m|[0m[38;5;239m<[0m
+         [38;5;239m>[0m[38;5;243m|[0m[38;5;29m\[0m [38;5;29m/[0m
+            [38;5;29m|/-[0m[38;5;243m|[0m[38;5;239m<[0m
+           [38;5;29m\|[0m
+       [38;5;239m>[0m[38;5;243m|[0m[38;5;29m-|[0m [38;5;29m|/-[0m[38;5;243m|[0m[38;5;239m<[0m
+          [38;5;29m\[0m [38;5;29m|[0m [38;5;29m|[0m [38;5;29m/-[0m[38;5;243m|[0m[38;5;239m<[0m
+           [38;5;29m\|/.|[0m
+[38;5;95m.[0m  [38;5;95m,[0m [38;5;95m_[0m [38;5;95m.[0m [38;5;95m.,[0m [38;5;29ml[0m[38;5;95m,[0m[38;5;29m/[0m[38;5;95m_[0m [38;5;95m.,[0m [38;5;95m_[0m [38;5;95m.[0m
+  [38;5;95m^[0m      [38;5;95m'[0m        [38;5;95m`[0m    [38;5;95m'[0m
+
+name  : "Maria"
+stage : common gnu/linux black flowering daffodil
+age   : 9 days
+rate  : 7th generation (x2.2)
+score : 2473507
+coord : 28 South, 10 East
+water : |[38;5;27m█████████ [0m| 90%
+bonus : |[38;5;55m▞▞        [0m| 20%
+```
+
+## Actions
+
+=> /app/visit/92d39a85bf5c4f36ad021aa7d7337429/water 💧 Water plant
+=> /app/visit/92d39a85bf5c4f36ad021aa7d7337429/fertilize 🍄 Apply fertilizer
+=> /app/visit/92d39a85bf5c4f36ad021aa7d7337429/search 🌸 Pick a petal
+=> /app/visit/92d39a85bf5c4f36ad021aa7d7337429/song 🎷 Play synthesizer
