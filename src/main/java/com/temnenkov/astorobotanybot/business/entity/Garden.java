@@ -47,10 +47,10 @@ public class Garden extends GeminiAwareEntity {
             return WateringResult.NOT_FOUND;
         }
 
-        final List<Info> infos = infoByUrls(urls, true);
+        final List<WaterInfo> waterInfos = waterInfoByUrls(urls);
 
         for(Stage stage : ORDER) {
-           final WateringResult result = doWater(byStage(infos, stage));
+           final WateringResult result = doWater(byStage(waterInfos, stage));
            if (result.isTerminal()) {
                return result;
            }
@@ -59,15 +59,15 @@ public class Garden extends GeminiAwareEntity {
         return WateringResult.NOT_FOUND;
     }
 
-    private WateringResult doWater(@NotNull List<Info> infos) {
-        for (Info info : infos) {
-            if (info.waterQty < waterLimit) {
-                var oldWaterQty = info.waterQty;
-                info.plant.doWater();
-                logger.log(Level.INFO, () -> "%s %s plant %s with waterQty %d watered".formatted(info.stage, type, info.plant.getUrl(), oldWaterQty));
+    private WateringResult doWater(@NotNull List<WaterInfo> waterInfos) {
+        for (WaterInfo waterInfo : waterInfos) {
+            if (waterInfo.waterQty < waterLimit) {
+                var oldWaterQty = waterInfo.waterQty;
+                waterInfo.plant.doWater();
+                logger.log(Level.INFO, () -> "%s %s plant %s with waterQty %d watered".formatted(waterInfo.stage, type, waterInfo.plant.getUrl(), oldWaterQty));
 
-                info.plant.load();
-                int newWaterQty = info.plant.waterQty();
+                waterInfo.plant.load();
+                int newWaterQty = waterInfo.plant.waterQty();
                 if (newWaterQty == oldWaterQty) {
                     return WateringResult.TOO_EARLY;
                 }
@@ -79,10 +79,10 @@ public class Garden extends GeminiAwareEntity {
     }
 
     @NotNull
-    private List<Info> infoByUrls(@NotNull List<String> urls, boolean skipWithFence) {
+    private List<WaterInfo> waterInfoByUrls(@NotNull List<String> urls) {
         return urls.stream().map(purl -> {
             final var plant = new Plant(rootUrl, purl).load();
-            if (skipWithFence && plant.hasFence()) {
+            if (plant.hasFence()) {
                 return null;
             }
             final var waterQty = plant.waterQty();
@@ -90,7 +90,7 @@ public class Garden extends GeminiAwareEntity {
             final Stage stage = Stage.getStage(stageString);
 
             if (stage != null) {
-                return new Info(plant, waterQty, stage);
+                return new WaterInfo(plant, waterQty, stage);
             }
 
             return null;
@@ -98,11 +98,11 @@ public class Garden extends GeminiAwareEntity {
     }
 
     @NotNull
-    private List<Info> byStage(@NotNull List<Info> infos, @NotNull Stage stage) {
-        return infos.stream().filter(info -> stage == info.stage).toList();
+    private List<WaterInfo> byStage(@NotNull List<WaterInfo> waterInfos, @NotNull Stage stage) {
+        return waterInfos.stream().filter(waterInfo -> stage == waterInfo.stage).toList();
     }
 
-    private record Info(Plant plant, int waterQty, Stage stage) {
+    private record WaterInfo(Plant plant, int waterQty, Stage stage) {
     }
 
 }
