@@ -16,6 +16,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class DbStore<K, V> {
@@ -83,15 +84,23 @@ public class DbStore<K, V> {
     }
 
     public void compress() {
-        try {
-            final File temp = File.createTempFile("astobotany", ".txt");
-            final var tempStore = new DbStore<K, V>(temp);
-            map.forEach(tempStore::put);
+        synchronized (lock) {
+            try {
+                final File temp = File.createTempFile("astobotany", ".txt");
+                final var tempStore = new DbStore<K, V>(temp);
+                map.forEach(tempStore::put);
 
-            Files.move(temp.toPath(), log.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+                Files.move(temp.toPath(), log.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
 
-        } catch (IOException e) {
-            throw new DbPanicException(e);
+            } catch (IOException e) {
+                throw new DbPanicException(e);
+            }
+        }
+    }
+
+    public Stream<K> keys(Predicate<K> predicate) {
+        synchronized (lock) {
+            return map.keySet().stream().filter(predicate);
         }
     }
 

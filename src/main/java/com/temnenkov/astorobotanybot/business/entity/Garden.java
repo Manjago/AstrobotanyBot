@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 public class Garden extends GeminiAwareEntity {
     private static final Logger logger = Logger.getLogger("Garden");
     private final String rootUrl;
-    private final String url;
+    protected final String url;
     private final int waterLimit;
     private final String type;
     private final Stage[] ORDER = {Stage.FLOWERING, Stage.MATURE, Stage.YOUNG,
@@ -32,15 +32,7 @@ public class Garden extends GeminiAwareEntity {
 
     public WateringResult doWater() {
         check();
-        final String[] lines = geminiContent.display().split("\\r?\\n");
-        final List<String> urls = Arrays.stream(lines).filter(s -> s.startsWith("=>/app/visit/")).map(s -> {
-            int space = s.indexOf(" ");
-            if (space == -1) {
-                return null;
-            }
-            return s.substring(3, space);
-        }).filter(Objects::nonNull).limit(5).toList(); //todo to config
-        //todo parse text from description
+        final List<String> urls = getUrls(5);
 
         if (urls.isEmpty()) {
             logger.log(Level.INFO, () -> "No found plants for watering: %s".formatted(url));
@@ -57,6 +49,20 @@ public class Garden extends GeminiAwareEntity {
         }
 
         return WateringResult.NOT_FOUND;
+    }
+
+    @NotNull
+    protected List<String> getUrls(long limit) {
+        final String[] lines = geminiContent.display().split("\\r?\\n");
+        //todo to config
+        //todo parse text from description
+        return Arrays.stream(lines).filter(s -> s.startsWith("=>/app/visit/")).map(s -> {
+            int space = s.indexOf(" ");
+            if (space == -1) {
+                return null;
+            }
+            return s.substring(3, space);
+        }).filter(Objects::nonNull).limit(limit).toList();
     }
 
     private WateringResult doWater(@NotNull List<WaterInfo> waterInfos) {
