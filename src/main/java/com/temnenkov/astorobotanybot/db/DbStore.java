@@ -83,15 +83,17 @@ public class DbStore<K, V> {
     }
 
     public void compress() {
-        try {
-            final File temp = File.createTempFile("astobotany", ".txt");
-            final var tempStore = new DbStore<K, V>(temp);
-            map.forEach(tempStore::put);
+        synchronized (lock) {
+            try {
+                final File temp = File.createTempFile("astobotany", ".txt");
+                final var tempStore = new DbStore<K, V>(temp);
+                map.forEach(tempStore::put);
 
-            Files.move(temp.toPath(), log.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+                Files.move(temp.toPath(), log.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
 
-        } catch (IOException e) {
-            throw new DbPanicException(e);
+            } catch (IOException e) {
+                throw new DbPanicException(e);
+            }
         }
     }
 

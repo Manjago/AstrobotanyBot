@@ -1,5 +1,6 @@
 package com.temnenkov.astorobotanybot.business.script;
 
+import com.temnenkov.astorobotanybot.business.GeminiHelper;
 import com.temnenkov.astorobotanybot.business.dbaware.NextDate;
 import com.temnenkov.astorobotanybot.business.entity.DryPlants;
 import com.temnenkov.astorobotanybot.business.entity.WiltingPlants;
@@ -15,11 +16,12 @@ import java.util.logging.Logger;
 public class WaterOthersScript {
     private static final Logger logger = Logger.getLogger("WaterOthersScript");
     private final NextDate nextForeignWatering;
+    private final GeminiHelper geminiHelper;
 
     public void invoke(@NotNull String rootUrl, int waterLimit) {
 
         final var allowed = nextForeignWatering.allowed();
-        logger.log(Level.INFO, "Check timer for water other: %s".formatted(allowed));
+        logger.log(Level.INFO, () -> "Check timer for water other: %s".formatted(allowed));
         if (!allowed.passed()) {
             logger.log(Level.FINEST, () -> "Now %s, nextTime %s no foreign watering".formatted(allowed.now(), allowed.nextDate()));
             return;
@@ -27,9 +29,9 @@ public class WaterOthersScript {
 
         logger.log(Level.INFO, () -> "Now " + allowed.now() + ", nextTime " + allowed.nextDate() + " do foreign watering");
 
-        final var wiltingPlants = new WiltingPlants(rootUrl, waterLimit).load();
+        final var wiltingPlants = new WiltingPlants(rootUrl, geminiHelper);
 
-        switch (wiltingPlants.doWater()) {
+        switch (wiltingPlants.doWater(waterLimit, 10)) {
             case WATERED -> {
                 logger.log(Level.INFO, "Foreign wilting plant watered");
                 nextForeignWatering.storeNext(Instant.now().plus(30, ChronoUnit.MINUTES));
@@ -42,9 +44,9 @@ public class WaterOthersScript {
             }
         }
 
-        final var dryPlants = new DryPlants(rootUrl, waterLimit).load();
+        final var dryPlants = new DryPlants(rootUrl, geminiHelper);
 
-        switch (dryPlants.doWater()) {
+        switch (dryPlants.doWater(waterLimit, 5)) {
             case WATERED -> {
                 logger.log(Level.INFO, "Foreign dry plant watered");
                 nextForeignWatering.storeNext(Instant.now().plus(30, ChronoUnit.MINUTES));
