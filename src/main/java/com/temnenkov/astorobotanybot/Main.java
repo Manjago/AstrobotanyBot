@@ -74,7 +74,7 @@ public class Main {
 
         new WaterOthersScript(new NextForeignWatering(database), geminiHelper).invoke(rootUrl, Integer.parseInt(config.getConfigParameter("app.foreign.water.limit")));
 
-        new PickPetalsScript(rootUrl, geminiHelper, new SeenTracker(database, "pick.petail")).invoke(true);
+        new PickPetalsScript(rootUrl, geminiHelper, new SeenTracker(database, "pick.petail")).invoke(false);
         // to prevent garbage collection - still use
         logger.log(Level.INFO, () -> "Exit, released lock %s".formatted(preventGC));
     }
@@ -119,9 +119,7 @@ public class Main {
         final String userHome = System.getProperty("user.home");
         final File file = new File(userHome, "astrobotanybot.lock");
         try {
-            FileChannel fc = FileChannel.open(file.toPath(),
-                    StandardOpenOption.CREATE,
-                    StandardOpenOption.WRITE);
+            FileChannel fc = FileChannel.open(file.toPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
             FileLock lock = fc.tryLock();
             if (lock == null) {
                 throw new InitException("another instance is running");

@@ -28,9 +28,9 @@ public class SeenTracker {
         final Instant stored = nextDate.loadNext();
         if (stored != null && (stored.atZone(ZoneId.systemDefault()).getDayOfMonth() != now.atZone(ZoneId.systemDefault()).getDayOfMonth())) {
             database.remove(key);
-            logger.log(Level.INFO, "refreshed");
+            logger.log(Level.INFO, "REFRESHED");
         } else {
-            logger.log(Level.INFO, "refresh nt need");
+            logger.log(Level.INFO, "refresh not need");
         }
         nextDate.storeNext(now);
     }
@@ -38,7 +38,11 @@ public class SeenTracker {
     public boolean notSeen(@NotNull String s) {
         final Set<String> set = getSet();
         boolean result = !set.contains(s);
-        logger.info(() -> "%s not seen %s".formatted(s, result));
+        if (result) {
+            logger.info(() -> "%s not seen".formatted(s));
+        } else {
+            logger.info(() -> "%s ALREADY SEEN".formatted(s));
+        }
         return result;
     }
 

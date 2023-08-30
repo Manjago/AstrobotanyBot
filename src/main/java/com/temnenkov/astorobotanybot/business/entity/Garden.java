@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -51,8 +52,14 @@ public class Garden {
 
     @NotNull
     public Stream<String> getUrls(@NotNull String prefix, int removeFromHead) {
+        return getUrls(prefix, removeFromHead, s -> true);
+    }
+    @NotNull
+    public Stream<String> getUrls(@NotNull String prefix, int removeFromHead, @NotNull Predicate<String> preFilter) {
         final String[] lines = geminiResponse.split("\\r?\\n");
-        return Arrays.stream(lines).filter(s -> s.startsWith(prefix)).map(s -> {
+        return Arrays.stream(lines)
+                .filter(preFilter)
+                .filter(s -> s.startsWith(prefix)).map(s -> {
             int space = s.indexOf(" ");
             if (space == -1) {
                 return null;

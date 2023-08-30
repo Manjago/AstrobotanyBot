@@ -6,6 +6,7 @@ import com.temnenkov.astorobotanybot.business.entity.Garden;
 import com.temnenkov.astorobotanybot.business.entity.Plant;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,8 @@ public class PickPetalsScript {
             return;
         }
 
+        logger.log(Level.INFO, () -> "%d pretenders to pick petails".formatted(urls.size()));
+
         urls.forEach(s -> {
             if (!dry) {
                 new Plant(rootUrl, s, geminiHelper).pickPetal();
@@ -45,18 +48,33 @@ public class PickPetalsScript {
     @NotNull
     private List<String> getUrls() {
         final List<String> urls = new ArrayList<>();
-        String nextPageUrl;
-        var garden = new Garden(rootUrl, "app/garden/flowering", "flowering", geminiHelper);
-        do {
-            urls.addAll(garden.getUrls("=>/app/visit/", 3).filter(seenTracker::notSeen).toList());
+        var garden = getGarden("app/garden/flowering");
+        String nextPageUrl = getNextPage(garden);
 
-            nextPageUrl = garden.getUrls("=>/app/garden/flowering", 3).filter(s -> s.contains("Next page")).findAny().orElse(null);
+        while(nextPageUrl != null) {
+            addToUrls(urls, garden);
 
-            if (nextPageUrl != null) {
-                garden = new Garden(rootUrl, nextPageUrl, "flowering", geminiHelper);
-            }
-        } while (nextPageUrl != null);
+            garden = getGarden(nextPageUrl);
+
+            nextPageUrl = getNextPage(garden);
+        }
+
+        addToUrls(urls, garden);
         return urls;
+    }
+
+    private void addToUrls(List<String> urls, Garden garden) {
+        urls.addAll(garden.getUrls("=>/app/visit/", 3).filter(seenTracker::notSeen).toList());
+    }
+
+    @NotNull
+    private Garden getGarden(String nextPageUrl) {
+        return new Garden(rootUrl, nextPageUrl, "flowering", geminiHelper);
+    }
+
+    @Nullable
+    private String getNextPage(@NotNull Garden garden) {
+        return garden.getUrls("=>/app/garden/flowering", 3, s -> s.contains("Next page")).findAny().orElse(null);
     }
 
 }
