@@ -1,9 +1,12 @@
 package com.temnenkov.astorobotanybot;
 
+import com.temnenkov.astorobotanybot.business.GeminiHelper;
 import com.temnenkov.astorobotanybot.business.dbaware.NextCompress;
 import com.temnenkov.astorobotanybot.business.dbaware.NextForeignWatering;
 import com.temnenkov.astorobotanybot.business.dbaware.NextMeWateringAndShake;
+import com.temnenkov.astorobotanybot.business.dbaware.SeenTracker;
 import com.temnenkov.astorobotanybot.business.entity.MyPlant;
+import com.temnenkov.astorobotanybot.business.script.PickPetalsScript;
 import com.temnenkov.astorobotanybot.business.script.ShakeLivesScript;
 import com.temnenkov.astorobotanybot.business.script.WaterMeScript;
 import com.temnenkov.astorobotanybot.business.script.WaterOthersScript;
@@ -54,6 +57,7 @@ public class Main {
         }
 
         initTLS(config);
+        final GeminiHelper geminiHelper = new GeminiHelper();
 
         final String rootUrl = config.getConfigParameter("root.url");
 
@@ -61,14 +65,16 @@ public class Main {
         final var allowedWaterMe = nextMeWateringAndShake.allowed();
         logger.log(Level.INFO, "Check timer for water me: %s".formatted(allowedWaterMe));
         if (allowedWaterMe.passed()) {
-            final var plant = new MyPlant(rootUrl).load();
+            final var plant = new MyPlant(rootUrl, geminiHelper);
 
             new WaterMeScript().invoke(plant, Integer.parseInt(config.getConfigParameter("app.water.limit")));
             new ShakeLivesScript().invoke(plant, Boolean.parseBoolean(config.getConfigParameter("app.shake.leaves")));
             nextMeWateringAndShake.storeNext(Instant.now().plus(30, ChronoUnit.MINUTES));
         }
 
-        new WaterOthersScript(new NextForeignWatering(database)).invoke(rootUrl, Integer.parseInt(config.getConfigParameter("app.foreign.water.limit")));
+        new WaterOthersScript(new NextForeignWatering(database), geminiHelper).invoke(rootUrl, Integer.parseInt(config.getConfigParameter("app.foreign.water.limit")));
+
+        new PickPetalsScript(rootUrl, geminiHelper, new SeenTracker(database, "pick.petail")).invoke(true);
         // to prevent garbage collection - still use
         logger.log(Level.INFO, () -> "Exit, released lock %s".formatted(preventGC));
     }

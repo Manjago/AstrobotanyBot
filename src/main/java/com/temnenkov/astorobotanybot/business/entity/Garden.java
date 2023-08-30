@@ -1,5 +1,6 @@
 package com.temnenkov.astorobotanybot.business.entity;
 
+import com.temnenkov.astorobotanybot.business.GeminiHelper;
 import com.temnenkov.astorobotanybot.business.Stage;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,31 +9,28 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
-public class Garden extends GeminiAwareEntity {
+public class Garden {
     private static final Logger logger = Logger.getLogger("Garden");
     private final String rootUrl;
     protected final String url;
-    private final int waterLimit;
     private final String type;
-    private final Stage[] ORDER = {Stage.FLOWERING, Stage.MATURE, Stage.YOUNG,
+    protected final GeminiHelper geminiHelper;
+    private static final Stage[] ORDER = {Stage.FLOWERING, Stage.MATURE, Stage.YOUNG,
             Stage.SEEDLING, Stage.SEED, Stage.SEED_BEARING};
+    private final String geminiResponse;
 
-    public Garden(String rootUrl, String url, int waterLimit, String type) {
+    public Garden(String rootUrl, String url, String type, GeminiHelper geminiHelper) {
         this.rootUrl = rootUrl;
         this.url = url;
-        this.waterLimit = waterLimit;
         this.type = type;
+        this.geminiHelper = geminiHelper;
+        geminiResponse = geminiHelper.loadGemini(rootUrl + url);
     }
 
-    public Garden load() {
-        loadGemini(rootUrl + url);
-        return this;
-    }
-
-    public WateringResult doWater() {
-        check();
-        final List<String> urls = getUrls(5);
+    public WateringResult doWater(int waterLimit, long limit) {
+        final List<String> urls = getUrls("=>/app/visit/", 3).limit(limit).toList();
 
         if (urls.isEmpty()) {
             logger.log(Level.INFO, () -> "No found plants for watering: %s".formatted(url));
@@ -42,7 +40,7 @@ public class Garden extends GeminiAwareEntity {
         final List<WaterInfo> waterInfos = waterInfoByUrls(urls);
 
         for(Stage stage : ORDER) {
-           final WateringResult result = doWater(byStage(waterInfos, stage));
+           final WateringResult result = doWater(byStage(waterInfos, stage), waterLimit);
            if (result.isTerminal()) {
                return result;
            }
@@ -52,28 +50,26 @@ public class Garden extends GeminiAwareEntity {
     }
 
     @NotNull
-    protected List<String> getUrls(long limit) {
-        final String[] lines = geminiContent.display().split("\\r?\\n");
-        //todo to config
-        //todo parse text from description
-        return Arrays.stream(lines).filter(s -> s.startsWith("=>/app/visit/")).map(s -> {
+    public Stream<String> getUrls(@NotNull String prefix, int removeFromHead) {
+        final String[] lines = geminiResponse.split("\\r?\\n");
+        return Arrays.stream(lines).filter(s -> s.startsWith(prefix)).map(s -> {
             int space = s.indexOf(" ");
             if (space == -1) {
                 return null;
             }
-            return s.substring(3, space);
-        }).filter(Objects::nonNull).limit(limit).toList();
+            return s.substring(removeFromHead, space);
+        }).filter(Objects::nonNull);
     }
 
-    private WateringResult doWater(@NotNull List<WaterInfo> waterInfos) {
+    private WateringResult doWater(@NotNull List<WaterInfo> waterInfos, int waterLimit) {
         for (WaterInfo waterInfo : waterInfos) {
             if (waterInfo.waterQty < waterLimit) {
                 var oldWaterQty = waterInfo.waterQty;
                 waterInfo.plant.doWater();
                 logger.log(Level.INFO, () -> "%s %s plant %s with waterQty %d watered".formatted(waterInfo.stage, type, waterInfo.plant.getUrl(), oldWaterQty));
 
-                waterInfo.plant.load();
-                int newWaterQty = waterInfo.plant.waterQty();
+                final Plant wateredPlant = waterInfo.plant.updatedVersion();
+                int newWaterQty = wateredPlant.waterQty();
                 if (newWaterQty == oldWaterQty) {
                     return WateringResult.TOO_EARLY;
                 }
@@ -87,7 +83,7 @@ public class Garden extends GeminiAwareEntity {
     @NotNull
     private List<WaterInfo> waterInfoByUrls(@NotNull List<String> urls) {
         return urls.stream().map(purl -> {
-            final var plant = new Plant(rootUrl, purl).load();
+            final var plant = new Plant(rootUrl, purl, geminiHelper);
             if (plant.hasFence()) {
                 return null;
             }
@@ -107,6 +103,7 @@ public class Garden extends GeminiAwareEntity {
     private List<WaterInfo> byStage(@NotNull List<WaterInfo> waterInfos, @NotNull Stage stage) {
         return waterInfos.stream().filter(waterInfo -> stage == waterInfo.stage).toList();
     }
+
 
     private record WaterInfo(Plant plant, int waterQty, Stage stage) {
     }

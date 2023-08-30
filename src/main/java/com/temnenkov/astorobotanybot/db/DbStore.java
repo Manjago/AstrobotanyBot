@@ -16,7 +16,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class DbStore<K, V> {
@@ -95,12 +94,6 @@ public class DbStore<K, V> {
             } catch (IOException e) {
                 throw new DbPanicException(e);
             }
-        }
-    }
-
-    public Stream<K> keys(Predicate<K> predicate) {
-        synchronized (lock) {
-            return map.keySet().stream().filter(predicate);
         }
     }
 

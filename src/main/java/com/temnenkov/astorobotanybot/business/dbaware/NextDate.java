@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.time.Instant;
 
 @RequiredArgsConstructor
-public abstract class NextDate {
+public class NextDate {
 
     private final DbStore<String, Serializable> database;
     private final String key;

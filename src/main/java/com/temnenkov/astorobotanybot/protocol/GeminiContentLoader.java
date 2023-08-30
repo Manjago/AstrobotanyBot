@@ -11,16 +11,13 @@ import java.net.URLConnection;
 public class GeminiContentLoader {
 
     public static GeminiContent loadGeminiContent(@NotNull URL url) {
-        final var geminiContent = new GeminiContent(url);
         try {
             URLConnection conn = url.openConnection();
             byte[] content = (byte[]) conn.getContent();
             String mime = conn.getContentType();
-            geminiContent.setMime(mime);
-            geminiContent.setContent(content);
+            return new GeminiContent(url, content, mime, null);
         } catch (Exception e) {
-            geminiContent.setException(e);
+            return new GeminiContent(url, null, null, e);
         }
-        return geminiContent;
     }
 }
