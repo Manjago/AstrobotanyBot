@@ -31,12 +31,16 @@ public class PickPetalsScript {
             return;
         }
 
-        logger.log(Level.INFO, () -> "%d pretenders to pick petails".formatted(urls.size()));
+        logger.log(Level.INFO, () -> "%d pretenders to pick petails: %s".formatted(urls.size(), urls));
 
         urls.forEach(s -> {
             if (!dry) {
-                new Plant(rootUrl, s, geminiHelper).pickPetal();
-                logger.log(Level.INFO, () -> "pick petail %s".formatted(s));
+                try {
+                    new Plant(rootUrl, s, geminiHelper).pickPetal();
+                    logger.log(Level.INFO, () -> "pick petail %s".formatted(s));
+                } catch (Exception ex) {
+                    logger.log(Level.SEVERE, "Fail pick petal from %s%s".formatted(rootUrl, s), ex);
+                }
             } else {
                 logger.log(Level.INFO, () -> "dry pick petail %s".formatted(s));
             }

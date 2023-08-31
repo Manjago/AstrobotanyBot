@@ -14,14 +14,14 @@ public class GeminiHelper {
         try {
             final var geminiContent = GeminiContentLoader.loadGeminiContent(new URL(fullUrl));
             if (geminiContent.exception() != null) {
-                throw new GeminiPanicException(geminiContent.exception());
+                throw new GeminiPanicException("Exception happens on load url %s".formatted(fullUrl), geminiContent.exception());
             }
             if (geminiContent.content() == null) {
-                throw new GeminiPanicException("Empty gemini content");
+                throw new GeminiPanicException("Empty content on load url %s".formatted(fullUrl));
             }
             return new String(geminiContent.content());
         } catch (MalformedURLException e) {
-            throw new GeminiPanicException(e);
+            throw new GeminiPanicException("Bad url on load url %s".formatted(fullUrl), e);
         }
     }
 
