@@ -2,14 +2,12 @@ package com.temnenkov.astorobotanybot;
 
 import com.temnenkov.astorobotanybot.business.GeminiHelper;
 import com.temnenkov.astorobotanybot.business.dbaware.NextCompress;
-import com.temnenkov.astorobotanybot.business.dbaware.NextForeignWatering;
 import com.temnenkov.astorobotanybot.business.dbaware.NextMeWateringAndShake;
 import com.temnenkov.astorobotanybot.business.dbaware.SeenTracker;
-import com.temnenkov.astorobotanybot.business.entity.MyPlant;
+import com.temnenkov.astorobotanybot.business.parser.PetailColor;
+import com.temnenkov.astorobotanybot.business.parser.PondParser;
 import com.temnenkov.astorobotanybot.business.script.PickPetalsScript;
-import com.temnenkov.astorobotanybot.business.script.ShakeLivesScript;
-import com.temnenkov.astorobotanybot.business.script.WaterMeScript;
-import com.temnenkov.astorobotanybot.business.script.WaterOthersScript;
+import com.temnenkov.astorobotanybot.business.script.PondScript;
 import com.temnenkov.astorobotanybot.db.DbStore;
 import com.temnenkov.astorobotanybot.protocol.GeminiURLStreamHandlerFactory;
 import org.jetbrains.annotations.NotNull;
@@ -64,6 +62,7 @@ public class Main {
         final var nextMeWateringAndShake = new NextMeWateringAndShake(database);
         final var allowedWaterMe = nextMeWateringAndShake.allowed();
         logger.log(Level.INFO, "Check timer for water me: %s".formatted(allowedWaterMe));
+/*
         if (allowedWaterMe.passed()) {
             final var plant = new MyPlant(rootUrl, geminiHelper);
 
@@ -73,8 +72,17 @@ public class Main {
         }
 
         new WaterOthersScript(new NextForeignWatering(database), geminiHelper).invoke(rootUrl, Integer.parseInt(config.getConfigParameter("app.foreign.water.limit")));
+*/
 
-        new PickPetalsScript(rootUrl, geminiHelper, new SeenTracker(database, "pick.petail")).invoke(false);
+        final SeenTracker seenTracker = new SeenTracker(database, "pick.petail");
+        final PetailColor blessedColor = new PondScript(rootUrl, geminiHelper, new PondParser()).invoke();
+        final PetailColor prevBlessedColor = (PetailColor) database.get("blessedColor");
+        if (!blessedColor.equals(prevBlessedColor)) {
+            database.put("blessedColor", blessedColor);
+            seenTracker.refresh();
+        }
+        new PickPetalsScript(rootUrl, geminiHelper, seenTracker).invoke(true);
+
         // to prevent garbage collection - still use
         logger.log(Level.INFO, () -> "Exit, released lock %s".formatted(preventGC));
     }

@@ -22,8 +22,6 @@ public class PickPetalsScript {
     private final SeenTracker seenTracker;
 
     public void invoke(boolean dry) {
-        seenTracker.refresh();
-
         final List<String> urls = getUrls();
 
         if (urls.isEmpty()) {

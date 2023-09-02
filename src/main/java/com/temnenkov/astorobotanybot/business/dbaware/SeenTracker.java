@@ -4,8 +4,6 @@ import com.temnenkov.astorobotanybot.db.DbStore;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.time.Instant;
-import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -15,24 +13,17 @@ public class SeenTracker {
     private static final Logger logger = Logger.getLogger("SeenTracker");
     private final DbStore<String, Serializable> database;
     private final String key;
-    private final NextDate nextDate;
 
     public SeenTracker(DbStore<String, Serializable> database, String key) {
         this.database = database;
         this.key = key;
-        nextDate = new NextDate(database, "seen.tracker." + key);
     }
 
     public void refresh() {
-        final Instant now = Instant.now();
-        final Instant stored = nextDate.loadNext();
-        if (stored != null && (stored.atZone(ZoneId.systemDefault()).getDayOfMonth() != now.atZone(ZoneId.systemDefault()).getDayOfMonth())) {
-            database.remove(key);
-            logger.log(Level.INFO, "REFRESHED");
-        } else {
-            logger.log(Level.INFO, "refresh not need");
-        }
-        nextDate.storeNext(now);
+        // temp
+        database.remove("seen.tracker." + key);
+        database.remove(key);
+        logger.log(Level.INFO, "REFRESHED");
     }
 
     public boolean notSeen(@NotNull String s) {
