@@ -1,7 +1,7 @@
 package com.temnenkov.astorobotanybot.business.entity;
 
 import com.temnenkov.astorobotanybot.business.GeminiHelper;
-import com.temnenkov.astorobotanybot.business.Stage;
+import com.temnenkov.astorobotanybot.business.parser.dto.PlantStage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -18,8 +18,8 @@ public class Garden {
     protected final String url;
     private final String type;
     protected final GeminiHelper geminiHelper;
-    private static final Stage[] ORDER = {Stage.FLOWERING, Stage.MATURE, Stage.YOUNG,
-            Stage.SEEDLING, Stage.SEED, Stage.SEED_BEARING};
+    private static final PlantStage[] ORDER = {PlantStage.FLOWERING, PlantStage.MATURE, PlantStage.YOUNG,
+            PlantStage.SEEDLING, PlantStage.SEED, PlantStage.SEED_BEARING};
     private final String geminiResponse;
 
     public Garden(String rootUrl, String url, String type, GeminiHelper geminiHelper) {
@@ -40,8 +40,8 @@ public class Garden {
 
         final List<WaterInfo> waterInfos = waterInfoByUrls(urls);
 
-        for(Stage stage : ORDER) {
-           final WateringResult result = doWater(byStage(waterInfos, stage), waterLimit);
+        for(PlantStage plantStage : ORDER) {
+           final WateringResult result = doWater(byStage(waterInfos, plantStage), waterLimit);
            if (result.isTerminal()) {
                return result;
            }
@@ -73,7 +73,7 @@ public class Garden {
             if (waterInfo.waterQty < waterLimit) {
                 var oldWaterQty = waterInfo.waterQty;
                 waterInfo.plant.doWater();
-                logger.log(Level.INFO, () -> "%s %s plant %s with waterQty %d watered".formatted(waterInfo.stage, type, waterInfo.plant.getUrl(), oldWaterQty));
+                logger.log(Level.INFO, () -> "%s %s plant %s with waterQty %d watered".formatted(waterInfo.plantStage, type, waterInfo.plant.getUrl(), oldWaterQty));
 
                 final Plant wateredPlant = waterInfo.plant.updatedVersion();
                 int newWaterQty = wateredPlant.waterQty();
@@ -96,10 +96,10 @@ public class Garden {
             }
             final var waterQty = plant.waterQty();
             final String stageString = plant.stageString();
-            final Stage stage = Stage.getStage(stageString);
+            final PlantStage plantStage = PlantStage.extractFromString(stageString);
 
-            if (stage != null) {
-                return new WaterInfo(plant, waterQty, stage);
+            if (plantStage != null) {
+                return new WaterInfo(plant, waterQty, plantStage);
             }
 
             return null;
@@ -107,12 +107,12 @@ public class Garden {
     }
 
     @NotNull
-    private List<WaterInfo> byStage(@NotNull List<WaterInfo> waterInfos, @NotNull Stage stage) {
-        return waterInfos.stream().filter(waterInfo -> stage == waterInfo.stage).toList();
+    private List<WaterInfo> byStage(@NotNull List<WaterInfo> waterInfos, @NotNull PlantStage plantStage) {
+        return waterInfos.stream().filter(waterInfo -> plantStage == waterInfo.plantStage).toList();
     }
 
 
-    private record WaterInfo(Plant plant, int waterQty, Stage stage) {
+    private record WaterInfo(Plant plant, int waterQty, PlantStage plantStage) {
     }
 
 }

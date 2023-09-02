@@ -1,4 +1,4 @@
-package com.temnenkov.astorobotanybot.business.parser;
+package com.temnenkov.astorobotanybot.business.parser.dto;
 
 import org.jetbrains.annotations.NotNull;
 

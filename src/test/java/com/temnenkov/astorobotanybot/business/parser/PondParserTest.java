@@ -1,5 +1,6 @@
 package com.temnenkov.astorobotanybot.business.parser;
 
+import com.temnenkov.astorobotanybot.business.parser.dto.PetailColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

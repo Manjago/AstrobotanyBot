@@ -1,9 +1,9 @@
 package com.temnenkov.astorobotanybot.business.script;
 
 import com.temnenkov.astorobotanybot.business.GeminiHelper;
-import com.temnenkov.astorobotanybot.business.parser.PetailColor;
 import com.temnenkov.astorobotanybot.business.parser.PondParser;
-import com.temnenkov.astorobotanybot.business.parser.PondState;
+import com.temnenkov.astorobotanybot.business.parser.dto.PetailColor;
+import com.temnenkov.astorobotanybot.business.parser.dto.PondState;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
