@@ -2,12 +2,17 @@ package com.temnenkov.astorobotanybot;
 
 import com.temnenkov.astorobotanybot.business.GeminiHelper;
 import com.temnenkov.astorobotanybot.business.dbaware.NextCompress;
+import com.temnenkov.astorobotanybot.business.dbaware.NextForeignWatering;
 import com.temnenkov.astorobotanybot.business.dbaware.NextMeWateringAndShake;
 import com.temnenkov.astorobotanybot.business.dbaware.SeenTracker;
+import com.temnenkov.astorobotanybot.business.entity.MyPlant;
 import com.temnenkov.astorobotanybot.business.parser.PetailColor;
 import com.temnenkov.astorobotanybot.business.parser.PondParser;
 import com.temnenkov.astorobotanybot.business.script.PickPetalsScript;
 import com.temnenkov.astorobotanybot.business.script.PondScript;
+import com.temnenkov.astorobotanybot.business.script.ShakeLivesScript;
+import com.temnenkov.astorobotanybot.business.script.WaterMeScript;
+import com.temnenkov.astorobotanybot.business.script.WaterOthersScript;
 import com.temnenkov.astorobotanybot.db.DbStore;
 import com.temnenkov.astorobotanybot.protocol.GeminiURLStreamHandlerFactory;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +44,7 @@ public class Main {
     }
 
     private void doWorkAndExit(String[] args) {
-        logger.log(Level.INFO, "--- Start ---");
+        logger.log(Level.INFO, "--- Start 1.0.11 ---");
         final FileLock preventGC = checkSecondInstance();
         logger.log(Level.INFO, () -> "Obtain lock %s".formatted(preventGC));
 
@@ -48,7 +53,7 @@ public class Main {
         final DbStore<String, Serializable> database = new DbStore<>(new File(config.getConfigParameter("app.db.file")));
         final var nextCompress = new NextCompress(database);
         final var allowed = nextCompress.allowed();
-        logger.log(Level.INFO, "Check timer for compress: %s".formatted(allowed));
+        logger.log(Level.INFO, () -> "Check timer for compress: %s".formatted(allowed));
         if (allowed.passed()) {
             database.compress();
             nextCompress.storeNext(Instant.now().plus(1, ChronoUnit.DAYS));
@@ -61,8 +66,7 @@ public class Main {
 
         final var nextMeWateringAndShake = new NextMeWateringAndShake(database);
         final var allowedWaterMe = nextMeWateringAndShake.allowed();
-        logger.log(Level.INFO, "Check timer for water me: %s".formatted(allowedWaterMe));
-/*
+        logger.log(Level.INFO, () -> "Check timer for water me: %s".formatted(allowedWaterMe));
         if (allowedWaterMe.passed()) {
             final var plant = new MyPlant(rootUrl, geminiHelper);
 
@@ -72,7 +76,6 @@ public class Main {
         }
 
         new WaterOthersScript(new NextForeignWatering(database), geminiHelper).invoke(rootUrl, Integer.parseInt(config.getConfigParameter("app.foreign.water.limit")));
-*/
 
         final SeenTracker seenTracker = new SeenTracker(database, "pick.petail");
         final PetailColor blessedColor = new PondScript(rootUrl, geminiHelper, new PondParser()).invoke();
