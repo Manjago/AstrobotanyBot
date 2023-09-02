@@ -1,0 +1,35 @@
+# Astrobotany - Koi Pond
+
+```
+                   [38;5;29m_[0m
+                 [38;5;29m/`6\[0m[38;5;220m__[0m
+          [38;5;94m,_[0m     [38;5;29m\[0m [38;5;29m_.[0m[38;5;220m=='[0m
+         [38;5;94m`)[0m [38;5;94m`""""`[0m[38;5;247m~~[0m[38;5;94m\[0m
+       [38;5;33m-~[0m [38;5;247m\[0m  [38;5;94m'~-.[0m   [38;5;94m/[0m [38;5;33m~-[0m
+   [38;5;33mjgs[0m  [38;5;33m~-[0m [38;5;247m`~-====-'[0m [38;5;33m~_[0m [38;5;33m~-[0m
+      [38;5;33m~[0m [38;5;33m-[0m [38;5;33m~[0m [38;5;33m~-[0m [38;5;33m~[0m [38;5;33m-[0m [38;5;33m~[0m [38;5;33m-[0m
+```
+
+=>/app 🚶 Go back
+
+## Pond
+
+Your karma: 2567
+
+Today's blessed color is [38;5;226myellow[0m. Tossing in [38;5;226myellow[0m petals will bestow 3x karma upon you.
+
+## Your Petals
+
+=> /app/pond/tribute/red Toss in 15 [38;5;197mred[0m petals.
+=> /app/pond/tribute/orange Toss in 4 [38;5;202morange[0m petals.
+=> /app/pond/tribute/green Toss in 26 [38;5;85mgreen[0m petals.
+=> /app/pond/tribute/blue Toss in 26 [38;5;81mblue[0m petals.
+=> /app/pond/tribute/indigo Toss in 27 [38;5;63mindigo[0m petals.
+=> /app/pond/tribute/violet Toss in 24 [38;5;165mviolet[0m petals.
+=> /app/pond/tribute/white Toss in 21 [38;5;250mwhite[0m petals.
+=> /app/pond/tribute/black Toss in 21 [38;5;239mblack[0m petals.
+=> /app/pond/tribute/gold Toss in 23 [38;5;178mgold[0m petals.
+
+## Statistics
+
+Across all of astrobotany, 779,508 petals have been tributed in total.
