@@ -3,7 +3,9 @@ package com.temnenkov.astorobotanybot.business.parser;
 import com.temnenkov.astorobotanybot.protocol.exception.GeminiPanicException;
 import org.jetbrains.annotations.NotNull;
 
-public enum PetailColor {
+import java.io.Serializable;
+
+public enum PetailColor implements Serializable {
     YELLOW("yellow"), RED("red"), ORANGE("orange"), GREEN("green"), BLUE("blue"),
     INDIGO("indigo"), VIOLET("violet"), WHITE("white"), BLACK("black"), GOLD("gold");
     private final String text;
