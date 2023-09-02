@@ -6,7 +6,7 @@
 
     <groupId>com.temnenkov</groupId>
     <artifactId>AstrobotanyBot</artifactId>
-    <version>1.0.11</version>
+    <version>1.0.12-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
