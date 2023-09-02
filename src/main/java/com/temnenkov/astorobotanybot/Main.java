@@ -6,7 +6,9 @@ import com.temnenkov.astorobotanybot.business.dbaware.NextForeignWatering;
 import com.temnenkov.astorobotanybot.business.dbaware.NextMeWateringAndShake;
 import com.temnenkov.astorobotanybot.business.dbaware.SeenTracker;
 import com.temnenkov.astorobotanybot.business.entity.MyPlant;
+import com.temnenkov.astorobotanybot.business.parser.PondParser;
 import com.temnenkov.astorobotanybot.business.script.PickPetalsScript;
+import com.temnenkov.astorobotanybot.business.script.PondScript;
 import com.temnenkov.astorobotanybot.business.script.ShakeLivesScript;
 import com.temnenkov.astorobotanybot.business.script.WaterMeScript;
 import com.temnenkov.astorobotanybot.business.script.WaterOthersScript;
@@ -75,6 +77,9 @@ public class Main {
         new WaterOthersScript(new NextForeignWatering(database), geminiHelper).invoke(rootUrl, Integer.parseInt(config.getConfigParameter("app.foreign.water.limit")));
 
         new PickPetalsScript(rootUrl, geminiHelper, new SeenTracker(database, "pick.petail")).invoke(false);
+
+        new PondScript(rootUrl, geminiHelper, new PondParser()).invoke();
+
         // to prevent garbage collection - still use
         logger.log(Level.INFO, () -> "Exit, released lock %s".formatted(preventGC));
     }
