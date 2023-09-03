@@ -1,0 +1,32 @@
+# Astrobotany - lunchboxhero_'s Garden
+
+=>/app/garden 🚶 Go back
+
+```
+
+
+            [38;5;154m+[0m
+            [38;5;76m|[0m [38;5;76m,[0m
+       [38;5;154m+[0m  [38;5;76m,[0m [38;5;76m|/[0m
+       [38;5;76m'\[0m  [38;5;76m\|[0m [38;5;76m,[0m
+       [38;5;76m\|[0m  [38;5;76m,|/[0m [38;5;154m+[0m [38;5;76m,[0m
+       [38;5;76m\|/[0m [38;5;76m\|[0m  [38;5;76m|/[0m
+[38;5;95m.[0m  [38;5;95m,[0m [38;5;95m_[0m [38;5;95m.[0m [38;5;76m\[0m[38;5;95m,[0m [38;5;76ml[0m[38;5;95m,[0m[38;5;76m/[0m[38;5;95m_[0m [38;5;95m.,[0m [38;5;95m_[0m [38;5;95m.[0m
+  [38;5;95m^[0m      [38;5;95m'[0m        [38;5;95m`[0m    [38;5;95m'[0m
+
+name  : "Matthew"
+stage : rare glowing mature snapdragon
+age   : 38 days
+rate  : 1st generation (x1.0)
+score : 1036665
+coord : 16 South, 39 East
+water : |[38;5;27m          [0m| 0%
+```
+
+This plant's owner has been missing for 38 days.
+
+## Actions
+
+=> /app/visit/5c9c8e5ae459462ba4ee08fe702aa389/water 💧 Water plant
+=> /app/visit/5c9c8e5ae459462ba4ee08fe702aa389/fertilize 🍄 Apply fertilizer
+=> /app/visit/5c9c8e5ae459462ba4ee08fe702aa389/song 🎷 Play synthesizer

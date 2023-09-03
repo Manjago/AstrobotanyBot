@@ -50,4 +50,34 @@ class PlantParserTest {
         assertFalse(plantState.mayShakeLives());
         assertFalse(plantState.my());
     }
+
+    @Test
+    void parseMy() throws IOException {
+        //given
+        final var geminiText = Files.readString(Path.of("src/test/resources/my-plant.txt"));
+        //when
+        final var plantState = plantParser.parse(geminiText);
+        //then
+        assertEquals(98, plantState.water());
+        assertEquals(PlantStage.SEEDLING, plantState.plantStage());
+        assertFalse(plantState.hasFence());
+        assertFalse(plantState.mayPickPetail());
+        assertTrue(plantState.mayShakeLives());
+        assertTrue(plantState.my());
+    }
+
+    @Test
+    void parseDry() throws IOException {
+        //given
+        final var geminiText = Files.readString(Path.of("src/test/resources/dry-plant.txt"));
+        //when
+        final var plantState = plantParser.parse(geminiText);
+        //then
+        assertEquals(0, plantState.water());
+        assertEquals(PlantStage.MATURE, plantState.plantStage());
+        assertFalse(plantState.hasFence());
+        assertFalse(plantState.mayPickPetail());
+        assertFalse(plantState.mayShakeLives());
+        assertFalse(plantState.my());
+    }
 }
