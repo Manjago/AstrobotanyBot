@@ -23,7 +23,8 @@ public enum PlantStage {
 
     @NotNull
     public static PlantStage extractFromString(@NotNull String text) {
-        for (PlantStage value : PLANT_STAGE_VALUES) {
+        for (int i = PLANT_STAGE_VALUES.length - 1; i >= 0; i--) {
+            PlantStage value = PLANT_STAGE_VALUES[i];
             if (text.contains(value.getStringValue())) {
                 return value;
             }

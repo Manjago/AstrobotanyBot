@@ -15,7 +15,7 @@
   [38;5;95m^[0m      [38;5;95m'[0m        [38;5;95m`[0m    [38;5;95m'[0m
 
 name  : "Maria"
-plantStage : common gnu/linux black flowering daffodil
+stage : common gnu/linux black flowering daffodil
 age   : 9 days
 rate  : 7th generation (x2.2)
 score : 2473507

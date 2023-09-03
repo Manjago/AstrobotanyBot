@@ -1,0 +1,44 @@
+# Astrobotany - Your Garden
+
+=> /app 🚶 Go back
+
+## Plant Details
+
+```
+
+
+
+
+
+
+          [38;5;34m.[0m [38;5;34m;[0m
+           [38;5;34m\|[0m
+[38;5;95m.[0m  [38;5;95m,[0m [38;5;95m_[0m [38;5;95m.[0m [38;5;95m.,[0m [38;5;34ml[0m[38;5;95m,[0m [38;5;95m_[0m [38;5;95m.,[0m [38;5;95m_[0m [38;5;95m.[0m
+  [38;5;95m^[0m      [38;5;95m'[0m        [38;5;95m`[0m    [38;5;95m'[0m
+
+name  : "Amanda"
+stage : seedling
+age   : 0 days
+rate  : 304th generation (x61.6)
+score : 125522
+coord : 11 South, 36 East
+water : |[38;5;27m█████████ [0m| 98%
+```
+
+You can feel the seedling looking back at you.
+It could be a(n) daffodil, lithops, or iris.
+
+## Actions
+
+=>/app/plant/water 💧 Water plant
+=> /app/plant/fertilize 🍄 Apply fertilizer
+=> /app/plant/shake 💰 Shake leaves (collect $$$)
+=> /app/plant/song 🎷 Play synthesizer
+=> /app/plant/rename 🏷 Rename plant
+
+## Links
+
+Unauthenticated public links to show off your garden.
+
+=> /public/cd2a8a776cbc4bb9818f73aabec1f6f5 🖼 Your plant
+=> /public/cd2a8a776cbc4bb9818f73aabec1f6f5/m1 🖼 Your plant (with color)
