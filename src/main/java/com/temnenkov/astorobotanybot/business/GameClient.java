@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
-public class Loader {
+public class GameClient {
     private final String baseUrl;
     private final GeminiHelper geminiHelper;
 

@@ -1,13 +1,16 @@
 package com.temnenkov.astorobotanybot;
 
+import com.temnenkov.astorobotanybot.business.GameClient;
 import com.temnenkov.astorobotanybot.business.GeminiHelper;
 import com.temnenkov.astorobotanybot.business.dbaware.NextCompress;
 import com.temnenkov.astorobotanybot.business.dbaware.NextForeignWatering;
 import com.temnenkov.astorobotanybot.business.dbaware.NextMeWateringAndShake;
 import com.temnenkov.astorobotanybot.business.dbaware.SeenTracker;
 import com.temnenkov.astorobotanybot.business.entity.MyPlant;
+import com.temnenkov.astorobotanybot.business.parser.PlantParser;
 import com.temnenkov.astorobotanybot.business.parser.PondParser;
 import com.temnenkov.astorobotanybot.business.parser.dto.PetailColor;
+import com.temnenkov.astorobotanybot.business.script.NewWaterMeScript;
 import com.temnenkov.astorobotanybot.business.script.PickPetalsScript;
 import com.temnenkov.astorobotanybot.business.script.PondScript;
 import com.temnenkov.astorobotanybot.business.script.ShakeLivesScript;
@@ -44,7 +47,7 @@ public class Main {
     }
 
     private void doWorkAndExit(String[] args) {
-        logger.log(Level.INFO, "--- Start 1.0.11 ---");
+        logger.log(Level.INFO, "--- 1.1.0-SNAPSHOT ---");
         final FileLock preventGC = checkSecondInstance();
         logger.log(Level.INFO, () -> "Obtain lock %s".formatted(preventGC));
 
@@ -64,6 +67,20 @@ public class Main {
 
         final String rootUrl = config.getConfigParameter("root.url");
 
+        //mainWork(database, rootUrl, geminiHelper, config);
+        newWork(rootUrl, geminiHelper, config);
+
+        // to prevent garbage collection - still use
+        logger.log(Level.INFO, () -> "Exit, released lock %s".formatted(preventGC));
+    }
+
+    private static void newWork(String rootUrl, GeminiHelper geminiHelper, @NotNull Config config) {
+        final var gameClient = new GameClient(rootUrl, geminiHelper);
+        final var plantParser = new PlantParser();
+        new NewWaterMeScript(gameClient, plantParser).invoke(Integer.parseInt(config.getConfigParameter("app.water.limit")));
+    }
+
+    private static void mainWork(DbStore<String, Serializable> database, String rootUrl, GeminiHelper geminiHelper, Config config) {
         final var nextMeWateringAndShake = new NextMeWateringAndShake(database);
         final var allowedWaterMe = nextMeWateringAndShake.allowed();
         logger.log(Level.INFO, () -> "Check timer for water me: %s".formatted(allowedWaterMe));
@@ -85,9 +102,6 @@ public class Main {
             seenTracker.refresh();
         }
         new PickPetalsScript(rootUrl, geminiHelper, seenTracker).invoke(true);
-
-        // to prevent garbage collection - still use
-        logger.log(Level.INFO, () -> "Exit, released lock %s".formatted(preventGC));
     }
 
     private void initTLS(@NotNull Config config) {
