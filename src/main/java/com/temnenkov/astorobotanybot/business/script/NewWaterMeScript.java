@@ -15,7 +15,7 @@ public class NewWaterMeScript {
     private final GameClient gameClient;
     private final PlantParser plantParser;
 
-    public void invoke(int waterLimit) {
+    public NewWaterMeScriptResult invoke(int waterLimit) {
         final var stateBefore = plantParser.parse(gameClient.myPlant());
         Assert.assertTrue(stateBefore.my(), () -> "Not my plant");
 
@@ -24,12 +24,14 @@ public class NewWaterMeScript {
             final var stateAfter = plantParser.parse(gameClient.myPlant());
             if (stateAfter.water() == stateBefore.water()) {
                 logger.log(Level.WARNING, () -> "I water plant, but no changes: stateBefore " + stateBefore + ", stateAfter " + stateAfter);
+                return new NewWaterMeScriptResult.NoChanges(stateBefore, stateAfter);
             } else {
-               logger.log(Level.INFO, () -> "I watered my plant, was %d now %d".formatted(stateBefore.water(), stateAfter.water()));
+                logger.log(Level.INFO, () -> "I watered my plant, was %d now %d".formatted(stateBefore.water(), stateAfter.water()));
+                return new NewWaterMeScriptResult.Watered(stateBefore.water(), stateAfter.water());
             }
         } else {
             logger.log(Level.FINE, () -> "PlantState is %s, waterLimit is %d - do nothing".formatted(stateBefore, waterLimit));
+            return new NewWaterMeScriptResult.DoNothing(stateBefore, waterLimit);
         }
-
     }
 }
