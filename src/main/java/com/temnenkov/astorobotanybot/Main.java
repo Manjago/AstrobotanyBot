@@ -11,6 +11,7 @@ import com.temnenkov.astorobotanybot.business.parser.PlantParser;
 import com.temnenkov.astorobotanybot.business.parser.PondParser;
 import com.temnenkov.astorobotanybot.business.parser.dto.PetailColor;
 import com.temnenkov.astorobotanybot.business.script.NewWaterMeScript;
+import com.temnenkov.astorobotanybot.business.script.NewWaterMeScriptResult;
 import com.temnenkov.astorobotanybot.business.script.PickPetalsScript;
 import com.temnenkov.astorobotanybot.business.script.PondScript;
 import com.temnenkov.astorobotanybot.business.script.ShakeLivesScript;
@@ -18,6 +19,7 @@ import com.temnenkov.astorobotanybot.business.script.WaterMeScript;
 import com.temnenkov.astorobotanybot.business.script.WaterOthersScript;
 import com.temnenkov.astorobotanybot.db.DbStore;
 import com.temnenkov.astorobotanybot.protocol.GeminiURLStreamHandlerFactory;
+import com.temnenkov.astorobotanybot.utils.DbTimer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -29,6 +31,7 @@ import java.nio.channels.FileLock;
 import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -68,15 +71,22 @@ public class Main {
         final String rootUrl = config.getConfigParameter("root.url");
 
         //mainWork(database, rootUrl, geminiHelper, config);
-        newWork(rootUrl, geminiHelper, config);
+        newWork(database, rootUrl, geminiHelper, config);
 
         // to prevent garbage collection - still use
         logger.log(Level.INFO, () -> "Exit, released lock %s".formatted(preventGC));
     }
 
-    private static void newWork(String rootUrl, GeminiHelper geminiHelper, @NotNull Config config) {
+    private static void newWork(DbStore<String, Serializable> database, String rootUrl, GeminiHelper geminiHelper, @NotNull Config config) {
         final var gameClient = new GameClient(rootUrl, geminiHelper);
         final var plantParser = new PlantParser();
+
+        new DbTimer<NewWaterMeScriptResult>(database, "new.water.script").tryFire(
+                Instant.now(), () -> new NewWaterMeScript(gameClient, plantParser).invoke(Integer.parseInt(config.getConfigParameter("app.water.limit"))),
+                (r, f) -> Instant.now().plus(60, ChronoUnit.MINUTES),
+                (t, f) -> Instant.now().plus(10, ChronoUnit.MINUTES)
+        );
+
         new NewWaterMeScript(gameClient, plantParser).invoke(Integer.parseInt(config.getConfigParameter("app.water.limit")));
     }
 
