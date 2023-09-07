@@ -1,6 +1,5 @@
 package com.temnenkov.astorobotanybot.business.script;
 
-import com.temnenkov.astorobotanybot.business.parser.dto.PlantStage;
 import com.temnenkov.astorobotanybot.business.parser.dto.PlantState;
 
 public sealed interface NewWaterMeScriptResult {
