@@ -1,0 +1,66 @@
+# Astrobotany - Store
+
+> No refunds!
+
+=>/app 🚶 Go back
+
+## For Sale
+
+Your Account Balance: 93,849 coins
+
+### ez-grow fertilizer
+
+Price : 75 coins
+Owned : 21
+
+=>/app/store/2 🔍 View Details (ez-grow fertilizer)
+
+### plain postcard
+
+Price : 50 coins
+Owned : 0
+
+=>/app/store/14 🔍 View Details (plain postcard)
+
+### fancy postcard
+
+Price : 125 coins
+Owned : 0
+
+=>/app/store/15 🔍 View Details (fancy postcard)
+
+### cool postcard
+
+Price : 125 coins
+Owned : 0
+
+=>/app/store/16 🔍 View Details (cool postcard)
+
+### romantic postcard
+
+Price : 125 coins
+Owned : 0
+
+=>/app/store/17 🔍 View Details (romantic postcard)
+
+### Audio Synthesizer
+
+Price : 300 coins
+Owned : 1
+
+=>/app/store/119 🔍 View Details (Audio Synthesizer)
+
+### badge #58, series 2 - 🧁
+
+Price : 616 coins
+Owned : 0
+
+=>/app/store/177 🔍 View Details (badge #58, series 2 - 🧁)
+
+### garden fence
+
+Price : 300 coins
+Owned : 0
+
+=>/app/store/220 🔍 View Details (garden fence)
+

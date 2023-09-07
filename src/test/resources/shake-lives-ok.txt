@@ -1,0 +1,44 @@
+# Astrobotany - Your Garden
+
+=> /app 🚶 Go back
+
+## Plant Details
+
+```
+
+
+
+          [38;5;35m`\'[0m
+           [38;5;35m`\'[0m  [38;5;35m/`[0m
+       [38;5;35m`|[0m [38;5;35m'\|/`[0m [38;5;35m/`[0m
+       [38;5;35m`\|'\|/`|/`[0m
+       [38;5;35m,'\[0m [38;5;35m\|/[0m [38;5;35m|/`[0m
+[38;5;95m.[0m  [38;5;95m,[0m [38;5;95m_[0m [38;5;95m.[0m[38;5;35m\|/[0m[38;5;95m,[0m[38;5;35ml-/`[0m[38;5;95m,.,[0m [38;5;95m_[0m [38;5;95m.[0m
+  [38;5;95m^[0m      [38;5;95m'[0m        [38;5;95m`[0m    [38;5;95m'[0m
+
+name  : "Michelle"
+stage : godly gelatinous mature sage
+age   : 0 days
+rate  : 310th generation (x62.8)
+score : 952470
+coord : 11 South, 36 East
+water : |[38;5;27m█████████ [0m| 99%
+```
+
+You shake your plant, and a handful of coins sprinkle down.
+(+18 coins)
+
+## Actions
+
+=>/app/plant/water 💧 Water plant
+=> /app/plant/fertilize 🍄 Apply fertilizer
+=> /app/plant/shake 💰 Shake leaves (collect $$$)
+=> /app/plant/song 🎷 Play synthesizer
+=> /app/plant/rename 🏷 Rename plant
+
+## Links
+
+Unauthenticated public links to show off your garden.
+
+=> /public/cd2a8a776cbc4bb9818f73aabec1f6f5 🖼 Your plant
+=> /public/cd2a8a776cbc4bb9818f73aabec1f6f5/m1 🖼 Your plant (with color)
