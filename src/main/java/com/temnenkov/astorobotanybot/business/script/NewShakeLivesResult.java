@@ -1,4 +1,4 @@
 package com.temnenkov.astorobotanybot.business.script;
 
-public record NewShakeLivesResult(int coinsEarned, long totalCoins) {
+public record NewShakeLivesResult(int coinsEarned) {
 }
