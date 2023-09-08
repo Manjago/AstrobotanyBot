@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.Callable;
+import java.util.function.Consumer;
 
 
 //inspired by kotlin.Result
@@ -38,6 +39,20 @@ public class Result<T> {
 
     public boolean isFailure() {
         return value instanceof Failure;
+    }
+
+    public Result<T> onSuccess(Consumer<T> consumer) {
+        if (this.isSuccess()) {
+            consumer.accept(this.getOrNull());
+        }
+        return this;
+    }
+
+    public Result<T> onFailure(Consumer<Throwable> consumer) {
+        if (this.isFailure()) {
+            consumer.accept(this.exceptionOrNull());
+        }
+        return this;
     }
 
     public T getOrNull() {

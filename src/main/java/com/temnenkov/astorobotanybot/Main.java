@@ -31,7 +31,6 @@ import java.nio.channels.FileLock;
 import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -81,7 +80,7 @@ public class Main {
         final var gameClient = new GameClient(rootUrl, geminiHelper);
         final var plantParser = new PlantParser();
 
-        new DbTimer<NewWaterMeScriptResult>(database, "new.water.script").tryFire(
+        new DbTimer<NewWaterMeScriptResult>(database, "new.water.script").fire(
                 Instant.now(), () -> new NewWaterMeScript(gameClient, plantParser).invoke(Integer.parseInt(config.getConfigParameter("app.water.limit"))),
                 (r, f) -> Instant.now().plus(60, ChronoUnit.MINUTES),
                 (t, f) -> Instant.now().plus(10, ChronoUnit.MINUTES)
