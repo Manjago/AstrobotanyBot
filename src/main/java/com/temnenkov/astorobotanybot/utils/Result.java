@@ -3,6 +3,8 @@ package com.temnenkov.astorobotanybot.utils;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.Callable;
+
 
 //inspired by kotlin.Result
 public class Result<T> {
@@ -20,6 +22,14 @@ public class Result<T> {
     @Contract(value = "_ -> new", pure = true)
     public static <T> @NotNull Result<T> failure(Throwable exception) {
         return new Result<>(new Failure(exception));
+    }
+
+    public static <T> @NotNull Result<T> runCatching(@NotNull Callable<T> callable) {
+        try {
+            return Result.success(callable.call());
+        } catch (Throwable t) {
+            return Result.failure(t);
+        }
     }
 
     public boolean isSuccess() {
