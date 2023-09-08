@@ -1,4 +1,6 @@
-# to release 1.1.0
+# plans
+
+## to release 1.1.0
 - [ ] NewShakeLives Script
   - [ ] Parser of shake lives result
   - [ ] Implement Shake Script
@@ -7,4 +9,8 @@
 - [ ] Remove Old Code
 - [ ] Every Day report
 - [ ] deploy with log config
+
+## to release 1.2.0
+- [ ] pick petails
+
  
