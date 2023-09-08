@@ -34,6 +34,7 @@ class PlantParserTest {
         assertTrue(plantState.mayPickPetail());
         assertFalse(plantState.mayShakeLives());
         assertFalse(plantState.my());
+        assertEquals(0, plantState.coinsEarned());
     }
 
     @Test
@@ -49,6 +50,7 @@ class PlantParserTest {
         assertFalse(plantState.mayPickPetail());
         assertFalse(plantState.mayShakeLives());
         assertFalse(plantState.my());
+        assertEquals(0, plantState.coinsEarned());
     }
 
     @Test
@@ -64,6 +66,7 @@ class PlantParserTest {
         assertFalse(plantState.mayPickPetail());
         assertTrue(plantState.mayShakeLives());
         assertTrue(plantState.my());
+        assertEquals(0, plantState.coinsEarned());
     }
 
     @Test
@@ -79,5 +82,38 @@ class PlantParserTest {
         assertFalse(plantState.mayPickPetail());
         assertFalse(plantState.mayShakeLives());
         assertFalse(plantState.my());
+        assertEquals(0, plantState.coinsEarned());
+    }
+
+    @Test
+    void parseCoins() throws IOException {
+        //given
+        final var geminiText = Files.readString(Path.of("src/test/resources/shake-lives-ok.txt"));
+        //when
+        final var plantState = plantParser.parse(geminiText);
+        //then
+        assertEquals(99, plantState.water());
+        assertEquals(PlantStage.MATURE, plantState.plantStage());
+        assertFalse(plantState.hasFence());
+        assertFalse(plantState.mayPickPetail());
+        assertTrue(plantState.mayShakeLives());
+        assertTrue(plantState.my());
+        assertEquals(18, plantState.coinsEarned());
+    }
+
+    @Test
+    void parseCoinsZero() throws IOException {
+        //given
+        final var geminiText = Files.readString(Path.of("src/test/resources/shake-lives-0-coins.txt"));
+        //when
+        final var plantState = plantParser.parse(geminiText);
+        //then
+        assertEquals(98, plantState.water());
+        assertEquals(PlantStage.MATURE, plantState.plantStage());
+        assertFalse(plantState.hasFence());
+        assertFalse(plantState.mayPickPetail());
+        assertTrue(plantState.mayShakeLives());
+        assertTrue(plantState.my());
+        assertEquals(0, plantState.coinsEarned());
     }
 }

@@ -29,7 +29,11 @@ public class PlantParser {
 
         final boolean my = Arrays.stream(lines).anyMatch(s -> s.contains("Your plant"));
 
-        return new PlantState(water, plantStage, hasFence, mayPickPetail, mayShakeLives, my);
+        final int coinsEarned = Arrays.stream(lines).filter( s -> s.contains(" coins)"))
+                .map( s -> Integer.parseInt(ParseUtuls.mid(s,"(", " coins)"))                )
+                .findAny().orElse(0);
+
+        return new PlantState(water, plantStage, hasFence, mayPickPetail, mayShakeLives, my, coinsEarned);
     }
 
     private int extractWater(@NotNull String waterString) {

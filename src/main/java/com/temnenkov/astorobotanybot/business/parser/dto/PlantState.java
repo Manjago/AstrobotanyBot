@@ -7,5 +7,6 @@ public record PlantState(int water,
                          boolean hasFence,
                          boolean mayPickPetail,
                          boolean mayShakeLives,
-                         boolean my) {
+                         boolean my,
+                         int coinsEarned) {
 }

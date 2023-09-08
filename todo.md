@@ -2,7 +2,7 @@
 
 ## to release 1.1.0
 - [ ] NewShakeLives Script
-  - [ ] Parser of shake lives result
+  - [x] Parser of shake lives result
   - [ ] Implement Shake Script
   - [ ] Plug-in Shake Script
 - [ ] New water Others Script
