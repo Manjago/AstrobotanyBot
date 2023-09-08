@@ -12,5 +12,6 @@
 
 ## to release 1.2.0
 - [ ] pick petails
+- [ ] throttle geminit client
 
  
