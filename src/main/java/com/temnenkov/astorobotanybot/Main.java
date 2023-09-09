@@ -84,7 +84,7 @@ public class Main {
             database.put("blessedColor", blessedColor);
             seenTracker.refresh();
         }
-        new PickPetalsScript(rootUrl, geminiHelper, seenTracker).invoke(true);
+        new PickPetalsScript(rootUrl, geminiHelper, seenTracker).invoke(false);
 
         // to prevent garbage collection - still use
         logger.log(Level.INFO, () -> "Exit, released lock %s".formatted(preventGC));
