@@ -13,6 +13,19 @@ public class GameClient {
         return geminiHelper.loadGemini(baseUrl + "app/plant");
     }
 
+    @NotNull
+    public String wiltingPlants() {
+        return geminiHelper.loadGemini(baseUrl + "app/garden/wilting");
+    }
+    @NotNull
+    public String dryPlants() {
+        return geminiHelper.loadGemini(baseUrl + "app/garden/dry");
+    }
+    @NotNull
+    public String justLoad(@NotNull String url) {
+        return geminiHelper.loadGemini(baseUrl + url);
+    }
+
     public void waterMyPlant() {
         geminiHelper.doAction(baseUrl + "app/plant/water");
     }

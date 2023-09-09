@@ -5,7 +5,6 @@ import com.temnenkov.astorobotanybot.business.parser.PlantParser;
 import com.temnenkov.astorobotanybot.utils.Assert;
 import lombok.RequiredArgsConstructor;
 
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

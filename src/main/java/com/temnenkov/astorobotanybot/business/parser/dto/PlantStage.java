@@ -6,19 +6,21 @@ import org.jetbrains.annotations.NotNull;
 
 @Getter
 public enum PlantStage {
-    SEED("seed"),
-    SEEDLING("seedling"),
-    YOUNG("young"),
-    MATURE("mature"),
-    FLOWERING("flowering"),
-    SEED_BEARING("seed-bearing");
+    SEED("seed", 4),
+    SEEDLING("seedling", 3),
+    YOUNG("young", 2),
+    MATURE("mature", 1),
+    FLOWERING("flowering", 0),
+    SEED_BEARING("seed-bearing", 5);
 
     private static final PlantStage[] PLANT_STAGE_VALUES = values();
 
     private final String stringValue;
+    private final int wateringPriority;
 
-    PlantStage(String stringValue) {
+    PlantStage(String stringValue, int wateringPriority) {
         this.stringValue = stringValue;
+        this.wateringPriority = wateringPriority;
     }
 
     @NotNull

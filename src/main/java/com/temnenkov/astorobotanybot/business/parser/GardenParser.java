@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GardenParser {
-    @NotNull GardenPageState parse(@NotNull String geminiText) {
+    @NotNull
+    public GardenPageState parse(@NotNull String geminiText) {
         final String[] lines = geminiText.split("\\r?\\n");
 
         final Map<String, String> map = Arrays.stream(lines).filter(s -> s.startsWith("=>/app/visit/"))
