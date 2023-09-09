@@ -10,6 +10,8 @@ import com.temnenkov.astorobotanybot.business.entity.MyPlant;
 import com.temnenkov.astorobotanybot.business.parser.PlantParser;
 import com.temnenkov.astorobotanybot.business.parser.PondParser;
 import com.temnenkov.astorobotanybot.business.parser.dto.PetailColor;
+import com.temnenkov.astorobotanybot.business.script.NewShakeLivesScript;
+import com.temnenkov.astorobotanybot.business.script.NewShakeLivesScriptResult;
 import com.temnenkov.astorobotanybot.business.script.NewWaterMeScript;
 import com.temnenkov.astorobotanybot.business.script.NewWaterMeScriptResult;
 import com.temnenkov.astorobotanybot.business.script.PickPetalsScript;
@@ -86,7 +88,15 @@ public class Main {
                 (t, f) -> Instant.now().plus(10, ChronoUnit.MINUTES)
         );
 
-        new NewWaterMeScript(gameClient, plantParser).invoke(Integer.parseInt(config.getConfigParameter("app.water.limit")));
+        final var needShakeLives = Boolean.parseBoolean(config.getConfigParameter("app.shake.leaves"));
+        if (needShakeLives) {
+            new DbTimer<NewShakeLivesScriptResult>(database, "new.shake.script").fire(
+                    Instant.now(), () -> new NewShakeLivesScript(gameClient, plantParser).invoke(),
+                    (r, f) -> Instant.now().plus(20, ChronoUnit.MINUTES),
+                    (t, f) -> Instant.now().plus(5, ChronoUnit.MINUTES)
+            );
+        }
+
     }
 
     private static void mainWork(DbStore<String, Serializable> database, String rootUrl, GeminiHelper geminiHelper, Config config) {

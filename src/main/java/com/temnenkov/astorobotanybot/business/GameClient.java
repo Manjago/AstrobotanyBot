@@ -17,6 +17,6 @@ public class GameClient {
         geminiHelper.doAction(baseUrl + "app/plant/water");
     }
     public void shakeLives() {
-        geminiHelper.doAction(baseUrl + "/app/plant/shake");
+        geminiHelper.doAction(baseUrl + "app/plant/shake");
     }
 }

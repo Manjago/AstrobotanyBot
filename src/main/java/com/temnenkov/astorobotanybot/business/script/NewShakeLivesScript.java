@@ -13,16 +13,16 @@ public class NewShakeLivesScript {
     private final GameClient gameClient;
     private final PlantParser plantParser;
 
-    public NewShakeLivesResult invoke() {
+    public NewShakeLivesScriptResult invoke() {
         final var stateBefore = plantParser.parse(gameClient.myPlant());
         if (!stateBefore.mayShakeLives()) {
             logger.log(Level.WARNING, () -> "Shake lives not allowed?! %s".formatted(stateBefore));
-            return new NewShakeLivesResult(0);
+            return new NewShakeLivesScriptResult(0);
         }
 
         gameClient.shakeLives();
         final var stateAfter = plantParser.parse(gameClient.myPlant());
         logger.log(Level.INFO, () -> "Earned " + stateAfter.coinsEarned() + " coins");
-        return new NewShakeLivesResult(stateAfter.coinsEarned());
+        return new NewShakeLivesScriptResult(stateAfter.coinsEarned());
     }
 }

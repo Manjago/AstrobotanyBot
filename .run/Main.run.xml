@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="com.temnenkov.astorobotanybot.Main" />
+    <module name="AstrobotanyBot" />
+    <option name="PROGRAM_PARAMETERS" value="$USER_HOME$/astro.properties" />
+    <option name="VM_PARAMETERS" value="-Djava.util.logging.config.file=$PROJECT_DIR$/src/test/resources/jul.properties" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.temnenkov.astorobotanybot.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

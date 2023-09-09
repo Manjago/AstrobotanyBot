@@ -7,12 +7,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GeminiHelper {
+    private static final Logger logger = Logger.getLogger("GeminiHelper");
     @NotNull
     public String loadGemini(@NotNull String fullUrl) {
         try {
             final var geminiContent = GeminiContentLoader.loadGeminiContent(new URL(fullUrl));
+            logger.log(Level.FINE, () -> "Load '%s'".formatted(geminiContent));
             if (geminiContent.exception() != null) {
                 throw new GeminiPanicException("Exception happens on load url %s".formatted(fullUrl), geminiContent.exception());
             }
@@ -27,7 +31,8 @@ public class GeminiHelper {
 
     public void doAction(@NotNull String fullUrl) {
         try {
-            GeminiContentLoader.loadGeminiContent(new URL(fullUrl));
+            final var geminiContent = GeminiContentLoader.loadGeminiContent(new URL(fullUrl));
+            logger.log(Level.FINE, () -> "Action '%s'".formatted(geminiContent));
         } catch (MalformedURLException e) {
             throw new GeminiPanicException(e);
         } catch (RedirectedException e) {
