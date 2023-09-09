@@ -1,0 +1,119 @@
+# Astrobotany - Community Garden
+
+```
+[38;5;63m&[0m[38;5;178m&[0m [38;5;20m&[0m   [38;5;238m&[0m [38;5;197m&[0m   [38;5;197m&[0m       [38;5;250m&[0m        [38;5;238m&[0m     [38;5;178m&[0m    [38;5;202m&[0m          [38;5;63m&[0m  [38;5;202m&[0m[38;5;41mo[0m
+     [38;5;197m&[0m   [38;5;226m&[0m                [38;5;226m&[0m      [38;5;165m&[0m  [38;5;226m&[0m[38;5;197m&[0m[38;5;238m&[0m[38;5;197m&[0m   [38;5;160m&[0m
+       [38;5;226m@[0m     [38;5;226m@[0m[38;5;178m&[0m  [38;5;178m&[0m   [38;5;197m&[0m         [38;5;85m&[0m[38;5;63m&[0m      [38;5;81m&[0m  [38;5;81m&[0m[38;5;165m&[0m  [38;5;197m&[0m [38;5;238m&[0m     [38;5;41mo[0m [38;5;81m&[0m  [38;5;63m&[0m
+ [38;5;197m&[0m     [38;5;45m~~~~[0m[38;5;202m&[0m  [38;5;63m&[0m[38;5;45m~~~~~~[0m           [38;5;63m&[0m   [38;5;208m&[0m   [38;5;226m&[0m    [38;5;81m&[0m  [38;5;45m&[0m
+      [38;5;45m~~~~~~~~~~~~~~~~~[0m                        [38;5;178m&[0m    [38;5;41mo[0m[38;5;226m&[0m[38;5;178m&[0m
+      [38;5;239m&[0m[38;5;45m~~~~~~~~[0m[38;5;178m><>[0m[38;5;45m~~~~~[0m   [38;5;63m&[0m    [38;5;238m&[0m     [38;5;202m&[0m    [38;5;226m&[0m   [38;5;202m&[0m[38;5;178m&[0m [38;5;239m&[0m    [38;5;202m&[0m [38;5;63m&[0m
+[38;5;165m&[0m     [38;5;81m&[0m [38;5;45m~~~~~~~~~~~~~~[0m               [38;5;178m&[0m           [38;5;165m&[0m [38;5;238mo[0m  [38;5;238m&[0m    [38;5;178m&[0m
+   [38;5;85m&[0m      [38;5;45m~~~~~~~~~~[0m [38;5;250m&[0m       [38;5;178m&[0m[38;5;63m&[0m       [38;5;165m&[0m        [38;5;226m&[0m [38;5;178m&[0m   [38;5;41mO[0m
+          [38;5;238m&[0m  [38;5;45m~~~~~~[0m                [38;5;250m&[0m  [38;5;250m@[0m          [38;5;239m&[0m  [38;5;226m&[0m  [38;5;239m&[0m[38;5;250m&[0m[38;5;239m&[0m[38;5;165m&[0m
+      [38;5;226m&[0m[38;5;63m&[0m    [38;5;63m&[0m      [38;5;202m&[0m    [38;5;239m&[0m  [38;5;250m@[0m             [38;5;165m&[0m     [38;5;250m&[0m  [38;5;63m&[0m  [38;5;213m&[0m [38;5;46m&[0m[38;5;178m&[0m [38;5;238m&[0m[38;5;41mO[0m
+[38;5;20m&[0m    [38;5;202m&[0m [38;5;202m&[0m      [38;5;160m@[0m   [38;5;178m&[0m       [38;5;41mo[0m       [38;5;226m@[0m[38;5;81m@[0m  [38;5;63m&[0m        [38;5;165m&[0m[38;5;41mO[0m[38;5;197m&[0m   [38;5;250m@[0m    [38;5;202m&[0m
+       [38;5;81m&[0m                         [38;5;202m&[0m  [38;5;226m&[0m    [38;5;208m&[0m[38;5;45m&[0m    [38;5;165m&[0m [38;5;81m&[0m
+ [38;5;63m&[0m[38;5;85m&[0m  [38;5;250m&[0m         [38;5;238mO[0m                    [38;5;250m&[0m [38;5;81m&[0m             [38;5;239m&[0m      [38;5;238m&[0m
+  [38;5;165m&[0m     [38;5;81m&[0m         [38;5;178m&[0m      [38;5;238m&[0m[38;5;226m&[0m          [38;5;213m&[0m  [38;5;238m&[0m           [38;5;165m@[0m [38;5;238m&[0m
+         [38;5;197m&[0m         [38;5;238m&[0m   [38;5;85m&[0m      [38;5;165m&[0m[38;5;85m&[0m       [38;5;250m&[0m       [38;5;41mo[0m       [38;5;238mo[0m
+         [38;5;250m&[0m             [38;5;41mO[0m           [38;5;239m&[0m                    [38;5;85m&&[0m[38;5;46m&[0m
+[38;5;250m&[0m [38;5;202m&[0m [38;5;226m&[0m                           [38;5;63m@[0m      [38;5;41mO[0m   [38;5;238m&[0m
+             [38;5;20m@[0m     [38;5;41mo[0m      [38;5;238mo[0m                   [38;5;85m&[0m          [38;5;165m&[0m
+  [38;5;238m&[0m    [38;5;81m&[0m   [38;5;202m&[0m[38;5;41mo[0m[38;5;81m&[0m[38;5;226m&[0m[38;5;239m&[0m [38;5;41mo[0m[38;5;197m&[0m    [38;5;41m,[0m    [38;5;239m&[0m        [38;5;160m&[0m  [38;5;238m&[0m [38;5;226m&[0m [38;5;41mo[0m    [38;5;41mo[0m[38;5;239m&[0m[38;5;41mo[0m[38;5;165m&[0m [38;5;238m&[0m
+  [38;5;41mO[0m     [38;5;238mO[0m                                      [38;5;178m&[0m
+                     [38;5;197m&[0m  [38;5;238mO[0m[38;5;41mO[0m                                 [38;5;226m&[0m
+      [38;5;226m@[0m    [38;5;41m,[0m     [38;5;85m&[0m   [38;5;63m@[0m           [38;5;41mO[0m   [38;5;41mOo[0m    [38;5;41mO[0m[38;5;63m&[0m            [38;5;41mo[0m
+  [38;5;239m&[0m  [38;5;208m&[0m        [38;5;81m&[0m           [38;5;41mO[0m[38;5;81m&[0m[38;5;41mO[0m      [38;5;41mo[0m[38;5;250m&[0m             [38;5;238m&[0m  [38;5;202m&[0m    [38;5;165m&[0m
+     [38;5;165m&[0m[38;5;178m@[0m  [38;5;165m&[0m      [38;5;41mo[0m   [38;5;85m&[0m [38;5;178m&[0m            [38;5;41mO[0m[38;5;85m@[0m          [38;5;41mOO[0m  [38;5;178m&[0m    [38;5;41mO[0m
+    [38;5;165m@[0m [38;5;81m@[0m [38;5;178m&[0m       [38;5;238mO[0m            [38;5;202m@[0m  [38;5;81m&[0m[38;5;226m@[0m[38;5;85m@[0m[38;5;178m@[0m       [38;5;238m&[0m  [38;5;81m@[0m[38;5;197m@[0m          [38;5;81m@[0m
+         [38;5;85m&[0m      [38;5;63m&[0m    [38;5;41mo[0m            [38;5;41mo[0m     [38;5;197m@[0m [38;5;238m@[0m    [38;5;63m@[0m
+     [38;5;41mo[0m[38;5;85m&[0m    [38;5;220m.[0m                    [38;5;41mO[0m[38;5;197m&[0m[38;5;41mo[0m  [38;5;238m&[0m   [38;5;81m@[0m[38;5;197m@[0m [38;5;226m&[0m           [38;5;226m&[0m
+    [38;5;41mO[0m         [38;5;238m&[0m    [38;5;41mo[0m[38;5;45m&[0m [38;5;239m&[0m [38;5;213m@[0m     [38;5;63m@[0m [38;5;41m,[0m [38;5;239m@[0m[38;5;238mO[0m    [38;5;202m@[0m   [38;5;41mo[0m    [38;5;238mo[0m[38;5;41mO[0m[38;5;165m@[0m [38;5;239m&[0m [38;5;41mO[0m [38;5;41mO[0m[38;5;238m@[0m[38;5;81m&[0m
+ [38;5;250m&[0m  [38;5;238m&[0m   [38;5;63m&[0m [38;5;41mo[0m [38;5;41mO[0m [38;5;41mO[0m  [38;5;226m@[0m[38;5;238m&[0m[38;5;239m@[0m  [38;5;250m@[0m [38;5;202m@[0m[38;5;41m,[0m [38;5;220m.[0m [38;5;202m@[0m  [38;5;165m&[0m  [38;5;238m@O[0m[38;5;63m&[0m   [38;5;41mO[0m[38;5;63m@[0m[38;5;41mo[0m[38;5;197m@[0m     [38;5;41mO[0m[38;5;238mO[0m[38;5;41mOO[0m [38;5;41mo[0m   [38;5;238mO[0m
+[38;5;41mo[0m[38;5;81m@[0m  [38;5;165m@[0m[38;5;41mo[0m [38;5;165m@[0m  [38;5;81m&[0m [38;5;238mO[0m   [38;5;238mO[0m [38;5;239m@[0m[38;5;165m&[0m[38;5;41mO[0m[38;5;250m@[0m[38;5;41mo[0m [38;5;41mO[0m  [38;5;238mO[0m [38;5;41mO[0m[38;5;85m@[0m[38;5;238m@[0m [38;5;238mO[0m[38;5;41mOO[0m[38;5;165m@[0m [38;5;238mO[0m[38;5;41mO[0m[38;5;202m@[0m[38;5;41mO[0m[38;5;238mO[0m[38;5;220m.[0m[38;5;238m@O[0m[38;5;41mO[0m [38;5;238mO[0m[38;5;41mO[0m[38;5;178m@[0m[38;5;41mO[0m[38;5;238m@[0m[38;5;41mO[0m[38;5;226m@[0m[38;5;238mO[0m [38;5;238mO[0m[38;5;46m@[0m[38;5;41mO[0m
+[38;5;41mO[0m[38;5;238mO[0m[38;5;41mO[0m [38;5;41mO,[0m [38;5;41mO[0m[38;5;238mo[0m[38;5;41mOOo[0m[38;5;81m@[0m[38;5;41mO[0m[38;5;165m@[0m[38;5;238moO[0m[38;5;41mOooOooooo[0m [38;5;41moo[0m[38;5;238mo[0m[38;5;41mooo[0m[38;5;238mo[0m[38;5;41m,[0m
+
+```
+
+=>/app 🚶 Go back
+
+## Filters
+
+Currently showing: dry
+
+=>/app/garden/all Show all (371)
+=>/app/garden/flowering Show flowering (59)
+=>/app/garden/healthy Show healthy (224)
+=>/app/garden/dry Show dry (147)
+=>/app/garden/wilting Show wilting (0)
+=>/app/garden/dead Show dead (0)
+
+=>/app/garden/search 🔍 Search by username
+
+## Plants
+
+=>/app/garden/dry/random ☘️ I'm feeling lucky!
+
+=>/app/visit/973f192cc1b1427fb792e2faa7c63028 godly cosmic blue seed-bearing fern
+(tended by 🦝 daveduck)
+
+=>/app/visit/3f9bc774411941daaca7d0b220783cd2 godly ersatz green seed-bearing moss
+(tended by 🦇 Aelspire)
+
+=>/app/visit/3a10baa1b0b8496eb2afbbecc3a80649 common narcotic orange seed-bearing baobab
+(tended by astrogardener)
+
+=>/app/visit/501dbb51837d4b9bb3f6cbafa352212f uncommon screaming yellow seed-bearing cactus
+(tended by ⛵ ofstudio)
+
+=>/app/visit/8f67346004cc4fa08cfde71a66b46286 common abraxan blue seed-bearing columbine
+(tended by tomasino)
+
+=>/app/visit/b2a115cc621347459fb98747b14fa91b uncommon cursed gold seed-bearing venus flytrap
+(tended by FlatFive)
+
+=>/app/visit/201a8ac872f24039b41576e7fd68ef60 common crunchy blue seed-bearing aloe
+(tended by Samsai)
+
+=>/app/visit/5869f4e9153e4a379f6b955d5380158b uncommon buff indigo seed-bearing lithops
+(tended by 🖍 peariscope)
+
+=>/app/visit/accf073e78834f41a2c05dccec0c9a69 common shaggy white seed-bearing daffodil
+(tended by 🐱 arisu)
+
+=>/app/visit/06a1a9d7223946e2865336d8f15acda7 uncommon shaggy white seed-bearing venus flytrap
+(tended by 🌶 actuallyaxley)
+
+=>/app/visit/8cf3fbef38a5402abd20f81c12d13faa common vorpal green seed-bearing moss
+(tended by csr)
+
+=>/app/visit/04bc532b838d407b967b3e19d7356ea7 godly crunchy rainbow seed-bearing jade plant
+(tended by solene)
+
+=>/app/visit/491c090b0d194cf4a79b578094d0bbb1 rare goth violet seed-bearing lithops
+(tended by Xerius)
+
+=>/app/visit/151a605d56cb4a459b083cac0caf3968 uncommon luminous indigo seed-bearing cactus
+(tended by GCU Prosthetic Conscience)
+
+=>/app/visit/259a77b35bff488cbcb2adafdbdb1aac godly glossy gold seed-bearing agave
+(tended by solderpunk)
+
+=>/app/visit/0bf1464161b24c9fb3e8c9a26f5a08f1 common glossy yellow seed-bearing iris
+(tended by 🛶 leo)
+
+=>/app/visit/8d1916e0d2b643e8816f1edbdb968861 common noxious blue seed-bearing snapdragon
+(tended by 📚 benthor)
+
+=>/app/visit/dd10d3d3ddf24ab0a961dfee17de62a8 uncommon cursed white seed-bearing brugmansia
+(tended by 🎏 fasckira)
+
+=>/app/visit/5e594faa6e6643ea8e2948f8561ee42d common levitating black seed-bearing pansy
+(tended by 🐰 bolatao)
+
+=>/app/visit/5f0f32871c2d483a9dd87ba0fc598d0b uncommon luminous yellow seed-bearing hemp
+(tended by arthureroberer)
+
+(page 1 of 8)
+
+=>/app/garden/dry/2 Next page

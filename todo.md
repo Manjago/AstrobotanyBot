@@ -6,6 +6,9 @@
   - [x] Implement Shake Script
   - [x] Plug-in Shake Script
 - [ ] New water Others Script
+  - [x] Parser of garden
+  - [ ] Implement Water Others Script
+  - [ ] Plug-in Water Others Script
 - [ ] Remove Old Code
 - [ ] Every Day report
 - [ ] deploy with log config
