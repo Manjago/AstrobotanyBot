@@ -9,13 +9,13 @@
   - [x] Parser of garden
   - [ ] Implement Water Others Script
   - [ ] Plug-in Water Others Script
+- [ ] pick petails
 - [ ] Remove Old Code
 - [ ] Every Day report
 - [ ] deploy with log config
 
 ## to release next
-- [ ] pick petails
-- [ ] throttle geminit client
+- [ ] throttle gemini client
 - [ ] teelgram report
 
  
