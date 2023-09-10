@@ -14,6 +14,11 @@ public class GameClient {
     }
 
     @NotNull
+    public String plant(@NotNull String id) {
+        return geminiHelper.loadGemini(baseUrl + "app/visit/" + id);
+    }
+
+    @NotNull
     public String wiltingPlants() {
         return geminiHelper.loadGemini(baseUrl + "app/garden/wilting");
     }
@@ -28,6 +33,9 @@ public class GameClient {
 
     public void waterMyPlant() {
         geminiHelper.doAction(baseUrl + "app/plant/water");
+    }
+    public void waterPlant(@NotNull String id) {
+        geminiHelper.doAction(baseUrl + "app/visit/" + id + "/water");
     }
     public void shakeLives() {
         geminiHelper.doAction(baseUrl + "app/plant/shake");
