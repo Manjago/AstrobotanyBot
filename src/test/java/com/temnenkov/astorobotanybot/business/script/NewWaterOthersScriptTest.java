@@ -3,9 +3,9 @@ package com.temnenkov.astorobotanybot.business.script;
 import com.temnenkov.astorobotanybot.business.GameClient;
 import com.temnenkov.astorobotanybot.business.parser.GardenParser;
 import com.temnenkov.astorobotanybot.business.parser.dto.GardenPageState;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -18,19 +18,14 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class NewWaterOthersScriptTest {
 
+    @InjectMocks
     private NewWaterOthersScript script;
-
     @Mock
     private GameClient gameClient;
     @Mock
     private NewWaterOthersScriptWorker newWaterOthersScriptWorker;
     @Mock
     private GardenParser gardenParser;
-
-    @BeforeEach
-    void setUp() {
-        script = new NewWaterOthersScript(gameClient, newWaterOthersScriptWorker, gardenParser);
-    }
 
     @Test
     void wilting() {
@@ -42,6 +37,30 @@ class NewWaterOthersScriptTest {
         when(gardenParser.parse("1")).thenReturn(gardenPageState);
         final NewWaterOtherScriptResult.Watered expectedResult = new NewWaterOtherScriptResult.Watered(10, 100);
         when(newWaterOthersScriptWorker.processGarden(gardenPageState)).thenReturn(expectedResult);
+        //when
+        final NewWaterOtherScriptResult result = script.invoke();
+        //then
+        assertEquals(expectedResult, result);
+        verifyNoMoreInteractions(gameClient, newWaterOthersScriptWorker, gardenParser);
+    }
+
+    @Test
+    void dry() {
+        //given
+        when(gameClient.wiltingPlants()).thenReturn("1");
+        final GardenPageState emptyGardenPageState = new GardenPageState(
+                Map.of(), null
+        );
+        when(gardenParser.parse("1")).thenReturn(emptyGardenPageState);
+
+        when(gameClient.dryPlants()).thenReturn("2");
+        final GardenPageState notEmptyGardenPageState = new GardenPageState(
+                Map.of("1", "2"), null
+        );
+        when(gardenParser.parse("2")).thenReturn(notEmptyGardenPageState);
+
+        final NewWaterOtherScriptResult.Watered expectedResult = new NewWaterOtherScriptResult.Watered(10, 100);
+        when(newWaterOthersScriptWorker.processGarden(notEmptyGardenPageState)).thenReturn(expectedResult);
         //when
         final NewWaterOtherScriptResult result = script.invoke();
         //then
