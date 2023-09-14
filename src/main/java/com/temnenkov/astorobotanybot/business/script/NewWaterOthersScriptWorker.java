@@ -1,6 +1,7 @@
 package com.temnenkov.astorobotanybot.business.script;
 
 import com.temnenkov.astorobotanybot.business.GameClient;
+import com.temnenkov.astorobotanybot.business.LogUtils;
 import com.temnenkov.astorobotanybot.business.parser.GardenParser;
 import com.temnenkov.astorobotanybot.business.parser.PlantParser;
 import com.temnenkov.astorobotanybot.business.parser.dto.GardenPageState;
@@ -69,19 +70,13 @@ public class NewWaterOthersScriptWorker {
     Map<String, String> loadPlantsToWater(@NotNull GardenPageState gardenPageState) {
         final Map<String, String> toWater = new HashMap<>(gardenPageState.idToStatus());
         GardenPageState currentPage = gardenPageState;
-        logPage(currentPage);
+        LogUtils.logFine(logger, currentPage);
         while (currentPage.nextPage() != null) {
             currentPage = gardenParser.parse(gameClient.justLoad(currentPage.nextPage()));
-            logPage(currentPage);
+            LogUtils.logFine(logger, currentPage);
             toWater.putAll(currentPage.idToStatus());
         }
         return toWater;
-    }
-
-    private static void logPage(@NotNull GardenPageState currentPage) {
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "Load page %s".formatted(currentPage));
-        }
     }
 
 }
