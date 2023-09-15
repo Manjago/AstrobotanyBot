@@ -1,8 +1,6 @@
 package com.temnenkov.astorobotanybot.business.script;
 
 import com.temnenkov.astorobotanybot.business.GameClient;
-import com.temnenkov.astorobotanybot.business.LogUtils;
-import com.temnenkov.astorobotanybot.business.parser.GardenParser;
 import com.temnenkov.astorobotanybot.business.parser.PlantParser;
 import com.temnenkov.astorobotanybot.business.parser.dto.GardenPageState;
 import com.temnenkov.astorobotanybot.business.parser.dto.PlantStage;
@@ -11,10 +9,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,19 +22,19 @@ public class NewWaterOthersScriptWorker {
     private static final Logger logger = Logger.getLogger("NewWaterOthersScriptWorker");
     private final GameClient gameClient;
     private final PlantParser plantParser;
-    private final GardenParser gardenParser;
 
     private record IdToStage(String id, PlantStage plantStage) {
     }
     
-    @NotNull NewWaterOtherScriptResult processGarden(@NotNull GardenPageState gardenPageState) {
+    @NotNull NewWaterOtherScriptResult processGarden(@NotNull GardenPageState gardenPageState,
+                                                     @NotNull Function<GardenPageState, Map<String, String>> traverseGarden) {
 
         if (gardenPageState.idToStatus().isEmpty()) {
             logger.log(Level.FINE, () -> "No pretenders for %s".formatted(gardenPageState));
             return NewWaterOtherScriptResult.NoPretenders.INSTANCE;
         }
 
-        final Map<String, String> toWater = loadPlantsToWater(gardenPageState);
+        final Map<String, String> toWater = traverseGarden.apply(gardenPageState);
 
         final List<IdToStage> pretenders = toWater.entrySet().stream()
                 .map(s -> new IdToStage(s.getKey(), PlantStage.extractFromString(s.getValue())))
@@ -64,19 +62,6 @@ public class NewWaterOthersScriptWorker {
             }
         }
         return null;
-    }
-
-    @NotNull
-    Map<String, String> loadPlantsToWater(@NotNull GardenPageState gardenPageState) {
-        final Map<String, String> toWater = new HashMap<>(gardenPageState.idToStatus());
-        GardenPageState currentPage = gardenPageState;
-        LogUtils.logFine(logger, currentPage);
-        while (currentPage.nextPage() != null) {
-            currentPage = gardenParser.parse(gameClient.justLoad(currentPage.nextPage()));
-            LogUtils.logFine(logger, currentPage);
-            toWater.putAll(currentPage.idToStatus());
-        }
-        return toWater;
     }
 
 }

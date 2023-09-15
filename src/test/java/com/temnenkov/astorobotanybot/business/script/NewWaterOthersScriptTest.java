@@ -12,6 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
@@ -36,7 +38,7 @@ class NewWaterOthersScriptTest {
         );
         when(gardenParser.parse("1")).thenReturn(gardenPageState);
         final NewWaterOtherScriptResult.Watered expectedResult = new NewWaterOtherScriptResult.Watered(10, 100);
-        when(newWaterOthersScriptWorker.processGarden(gardenPageState)).thenReturn(expectedResult);
+        when(newWaterOthersScriptWorker.processGarden(eq(gardenPageState), any())).thenReturn(expectedResult);
         //when
         final NewWaterOtherScriptResult result = script.invoke();
         //then
@@ -60,7 +62,7 @@ class NewWaterOthersScriptTest {
         when(gardenParser.parse("2")).thenReturn(notEmptyGardenPageState);
 
         final NewWaterOtherScriptResult.Watered expectedResult = new NewWaterOtherScriptResult.Watered(10, 100);
-        when(newWaterOthersScriptWorker.processGarden(notEmptyGardenPageState)).thenReturn(expectedResult);
+        when(newWaterOthersScriptWorker.processGarden(eq(notEmptyGardenPageState), any())).thenReturn(expectedResult);
         //when
         final NewWaterOtherScriptResult result = script.invoke();
         //then
