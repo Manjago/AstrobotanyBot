@@ -12,7 +12,7 @@ public enum PetailColor implements Serializable {
 
     private static final PetailColor[] VALUES = values();
 
-    private PetailColor(String stringValue) {
+    PetailColor(String stringValue) {
         this.stringValue = stringValue;
     }
 

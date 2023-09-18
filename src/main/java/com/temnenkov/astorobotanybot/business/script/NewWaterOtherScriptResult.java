@@ -4,7 +4,7 @@ import com.temnenkov.astorobotanybot.business.parser.dto.PlantState;
 
 public sealed interface NewWaterOtherScriptResult {
     enum NoPretenders implements NewWaterOtherScriptResult {
-        INSTANCE;
+        INSTANCE
     }
 
     record TooEarly(PlantState stateBefore, PlantState stateAfter) implements NewWaterOtherScriptResult {
