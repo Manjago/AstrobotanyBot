@@ -43,7 +43,7 @@ class NewWaterOthersScriptTest {
         final NewWaterOtherScriptResult result = script.invoke();
         //then
         assertEquals(expectedResult, result);
-        verifyNoMoreInteractions(gameClient, newWaterOthersScriptWorker, gardenParser);
+        noOthersInteractions();
     }
 
     @Test
@@ -67,6 +67,42 @@ class NewWaterOthersScriptTest {
         final NewWaterOtherScriptResult result = script.invoke();
         //then
         assertEquals(expectedResult, result);
+        noOthersInteractions();
+    }
+
+    @Test
+    void loadOnePage() {
+        //given
+        final GardenPageState gardenPageState = new GardenPageState(Map.of("1", "2", "3", "4"), null);
+        //when
+        final Map<String, String> map = script.loadPlantsToWater(gardenPageState);
+        //then
+        assertEquals(2, map.size());
+        assertEquals("4", map.get("3"));
+        assertEquals("2", map.get("1"));
+        noOthersInteractions();
+    }
+
+    @Test
+    void loadTwoPage() {
+        //given
+        final String nextPage = "//next";
+        final GardenPageState gardenPageState1 = new GardenPageState(Map.of("1", "2", "3", "4"), nextPage);
+        final GardenPageState gardenPageState2 = new GardenPageState(Map.of("5", "6"), null);
+        when(gameClient.justLoad(nextPage)).thenReturn("g");
+        when(gardenParser.parse("g")).thenReturn(gardenPageState2);
+        //when
+        final Map<String, String> map = script.loadPlantsToWater(gardenPageState1);
+        //then
+        assertEquals(3, map.size());
+        assertEquals("4", map.get("3"));
+        assertEquals("2", map.get("1"));
+        assertEquals("6", map.get("5"));
+        noOthersInteractions();
+    }
+
+    private void noOthersInteractions() {
         verifyNoMoreInteractions(gameClient, newWaterOthersScriptWorker, gardenParser);
     }
+
 }
