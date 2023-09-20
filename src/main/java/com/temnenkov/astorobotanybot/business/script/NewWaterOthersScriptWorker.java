@@ -28,6 +28,13 @@ public class NewWaterOthersScriptWorker {
     
     @NotNull NewWaterOtherScriptResult processGarden(@NotNull GardenPageState gardenPageState,
                                                      @NotNull Function<GardenPageState, Map<String, String>> traverseGarden) {
+        return processGarden(gardenPageState, traverseGarden, this::waterByPriority);
+    }
+
+    @NotNull NewWaterOtherScriptResult processGarden(@NotNull GardenPageState gardenPageState,
+                                                     @NotNull Function<GardenPageState, Map<String, String>> traverseGarden,
+                                                     @NotNull Function<List<IdToStage>, NewWaterOtherScriptResult> waterByPriority
+                                                     ) {
 
         if (gardenPageState.idToStatus().isEmpty()) {
             logger.log(Level.FINE, () -> "No pretenders for %s".formatted(gardenPageState));
@@ -41,7 +48,7 @@ public class NewWaterOthersScriptWorker {
                 .sorted(Comparator.comparingInt(o -> o.plantStage().getWateringPriority()))
                 .toList();
 
-        return Objects.requireNonNullElse(waterByPriority(pretenders), NewWaterOtherScriptResult.NoPretenders.INSTANCE);
+        return Objects.requireNonNullElse(waterByPriority.apply(pretenders), NewWaterOtherScriptResult.NoPretenders.INSTANCE);
     }
 
     @Nullable
