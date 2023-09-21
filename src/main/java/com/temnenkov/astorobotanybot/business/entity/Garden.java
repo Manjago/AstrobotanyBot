@@ -96,13 +96,10 @@ public class Garden {
             }
             final var waterQty = plant.waterQty();
             final String stageString = plant.stageString();
-            final PlantStage plantStage = PlantStage.extractFromString(stageString);
+            final PlantStage plantStage = PlantStage.extractFromString(Objects.requireNonNull(stageString));
 
-            if (plantStage != null) {
-                return new WaterInfo(plant, waterQty, plantStage);
-            }
+            return new WaterInfo(plant, waterQty, plantStage);
 
-            return null;
         }).filter(Objects::nonNull).toList();
     }
 
