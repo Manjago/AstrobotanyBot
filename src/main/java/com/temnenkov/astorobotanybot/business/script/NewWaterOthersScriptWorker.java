@@ -23,7 +23,8 @@ public class NewWaterOthersScriptWorker {
     private final GameClient gameClient;
     private final PlantParser plantParser;
 
-    private record IdToStage(String id, PlantStage plantStage) {
+    // pakage visibility for unit test
+    record IdToStage(String id, PlantStage plantStage) {
     }
     
     @NotNull NewWaterOtherScriptResult processGarden(@NotNull GardenPageState gardenPageState,
