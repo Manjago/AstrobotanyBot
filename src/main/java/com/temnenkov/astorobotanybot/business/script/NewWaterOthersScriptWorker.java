@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,7 +48,7 @@ public class NewWaterOthersScriptWorker {
                 .sorted(Comparator.comparingInt(o -> o.plantStage().getWateringPriority()))
                 .toList();
 
-        return Objects.requireNonNullElse(waterByPriority.apply(pretenders), NewWaterOtherScriptResult.NoPretenders.INSTANCE);
+        return waterByPriority.apply(pretenders);
     }
 
     @Nullable
@@ -69,7 +68,7 @@ public class NewWaterOthersScriptWorker {
                 return new NewWaterOtherScriptResult.Watered(stateBefore.water(), stateAfter.water());
             }
         }
-        return null;
+        return NewWaterOtherScriptResult.NoPretenders.INSTANCE;
     }
 
 }
