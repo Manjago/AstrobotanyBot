@@ -13,8 +13,9 @@ public class NewWaterMeScript {
     private static final Logger logger = Logger.getLogger("NewWaterMeScript");
     private final GameClient gameClient;
     private final PlantParser plantParser;
+    private final int waterLimit;
 
-    public NewWaterMeScriptResult invoke(int waterLimit) {
+    public NewWaterMeScriptResult invoke() {
         final var stateBefore = plantParser.parse(gameClient.myPlant());
         Assert.assertTrue(stateBefore.my(), () -> "Not my plant");
 
