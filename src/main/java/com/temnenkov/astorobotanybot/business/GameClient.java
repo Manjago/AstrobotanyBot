@@ -27,6 +27,10 @@ public class GameClient {
         return geminiHelper.loadGemini(baseUrl + "app/garden/dry");
     }
     @NotNull
+    public String floweringPlants() {
+        return geminiHelper.loadGemini(baseUrl + "app/garden/flowering");
+    }
+    @NotNull
     public String justLoad(@NotNull String url) {
         return geminiHelper.loadGemini(baseUrl + url);
     }
