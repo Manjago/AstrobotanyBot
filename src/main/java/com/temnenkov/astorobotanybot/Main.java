@@ -11,6 +11,7 @@ import com.temnenkov.astorobotanybot.business.parser.GardenParser;
 import com.temnenkov.astorobotanybot.business.parser.PlantParser;
 import com.temnenkov.astorobotanybot.business.parser.PondParser;
 import com.temnenkov.astorobotanybot.business.parser.dto.PetailColor;
+import com.temnenkov.astorobotanybot.business.script.GardenCollector;
 import com.temnenkov.astorobotanybot.business.script.NewShakeLivesScript;
 import com.temnenkov.astorobotanybot.business.script.NewShakeLivesScriptResult;
 import com.temnenkov.astorobotanybot.business.script.NewWaterMeScript;
@@ -60,7 +61,8 @@ public class Main {
         final var plantParser = new PlantParser();
         final var gardenParser = new GardenParser();
         final var newWaterOthersScriptWorker = new NewWaterOthersScriptWorker(gameClient, plantParser);
-        final var newWaterOthersScript = new NewWaterOthersScript(gameClient, newWaterOthersScriptWorker, gardenParser);
+        final var gardenCollector = new GardenCollector(gameClient, gardenParser);
+        final var newWaterOthersScript = new NewWaterOthersScript(gameClient, newWaterOthersScriptWorker, gardenParser, gardenCollector);
         final var newShakeLivesScript = new NewShakeLivesScript(gameClient, plantParser);
         final var newWaterMeScript = new NewWaterMeScript(gameClient, plantParser,
                 Integer.parseInt(config.getConfigParameter("app.water.limit")));

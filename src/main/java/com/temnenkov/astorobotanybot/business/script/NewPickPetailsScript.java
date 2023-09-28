@@ -13,7 +13,7 @@ public class NewPickPetailsScript {
     private final GardenParser gardenParser;
     public void invoke() {
         final var gardenPageState = gardenParser.parse(gameClient.wiltingPlants());
-         // todo NewWaterOthersScript.loadPlantsToWater need to be external common func
+         // todo use GardenCollector methods
 
     }
 }
