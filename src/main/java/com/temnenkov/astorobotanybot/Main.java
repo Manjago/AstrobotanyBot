@@ -12,6 +12,8 @@ import com.temnenkov.astorobotanybot.business.parser.PlantParser;
 import com.temnenkov.astorobotanybot.business.parser.PondParser;
 import com.temnenkov.astorobotanybot.business.parser.dto.PetailColor;
 import com.temnenkov.astorobotanybot.business.script.GardenCollector;
+import com.temnenkov.astorobotanybot.business.script.NewPickPetailsScript;
+import com.temnenkov.astorobotanybot.business.script.NewPondScript;
 import com.temnenkov.astorobotanybot.business.script.NewShakeLivesScript;
 import com.temnenkov.astorobotanybot.business.script.NewShakeLivesScriptResult;
 import com.temnenkov.astorobotanybot.business.script.NewWaterMeScript;
@@ -66,6 +68,10 @@ public class Main {
         final var newShakeLivesScript = new NewShakeLivesScript(gameClient, plantParser);
         final var newWaterMeScript = new NewWaterMeScript(gameClient, plantParser,
                 Integer.parseInt(config.getConfigParameter("app.water.limit")));
+        final var pondParser = new PondParser();
+        final var newPondScript = new NewPondScript(gameClient, pondParser);
+        final var seenTracker = new SeenTracker(database, "pick.petail");
+        final var newPickPetailsScript = new NewPickPetailsScript(gameClient, gardenParser, gardenCollector, seenTracker);
 
         new DbTimer<NewWaterMeScriptResult>(database, "new.water.script").fire(Instant.now(),
                 newWaterMeScript::invoke, (r, f) -> Instant.now().plus(60, ChronoUnit.MINUTES),
@@ -79,8 +85,16 @@ public class Main {
                 newWaterOthersScript::invoke, (r, f) -> Instant.now().plus(31, ChronoUnit.MINUTES),
                 (t, f) -> Instant.now().plus(5, ChronoUnit.MINUTES));
 
+        final PetailColor blessedColor = newPondScript.invoke();
+        final PetailColor prevBlessedColor = (PetailColor) database.get("blessedColor");
+        if (!blessedColor.equals(prevBlessedColor)) {
+            database.put("blessedColor", blessedColor);
+            seenTracker.refresh();
+        }
+        newPickPetailsScript.invoke();
     }
 
+    // todo remove this method and all old code
     private static void mainWork(DbStore<String, Serializable> database, String rootUrl, GeminiHelper geminiHelper,
                                  Config config) {
         final var nextMeWateringAndShake = new NextMeWateringAndShake(database);
