@@ -3,10 +3,7 @@ package com.temnenkov.astorobotanybot;
 import com.temnenkov.astorobotanybot.business.GameClient;
 import com.temnenkov.astorobotanybot.business.GeminiHelper;
 import com.temnenkov.astorobotanybot.business.dbaware.NextCompress;
-import com.temnenkov.astorobotanybot.business.dbaware.NextForeignWatering;
-import com.temnenkov.astorobotanybot.business.dbaware.NextMeWateringAndShake;
 import com.temnenkov.astorobotanybot.business.dbaware.SeenTracker;
-import com.temnenkov.astorobotanybot.business.entity.MyPlant;
 import com.temnenkov.astorobotanybot.business.parser.GardenParser;
 import com.temnenkov.astorobotanybot.business.parser.PlantParser;
 import com.temnenkov.astorobotanybot.business.parser.PondParser;
@@ -21,11 +18,6 @@ import com.temnenkov.astorobotanybot.business.script.NewWaterMeScriptResult;
 import com.temnenkov.astorobotanybot.business.script.NewWaterOtherScriptResult;
 import com.temnenkov.astorobotanybot.business.script.NewWaterOthersScript;
 import com.temnenkov.astorobotanybot.business.script.NewWaterOthersScriptWorker;
-import com.temnenkov.astorobotanybot.business.script.PickPetalsScript;
-import com.temnenkov.astorobotanybot.business.script.PondScript;
-import com.temnenkov.astorobotanybot.business.script.ShakeLivesScript;
-import com.temnenkov.astorobotanybot.business.script.WaterMeScript;
-import com.temnenkov.astorobotanybot.business.script.WaterOthersScript;
 import com.temnenkov.astorobotanybot.db.DbStore;
 import com.temnenkov.astorobotanybot.protocol.GeminiURLStreamHandlerFactory;
 import com.temnenkov.astorobotanybot.utils.DbTimer;
@@ -57,6 +49,7 @@ public class Main {
         }
     }
 
+    // todo remove ALL old code and rename others
     private static void newWork(DbStore<String, Serializable> database, String rootUrl, GeminiHelper geminiHelper,
                                 @NotNull Config config) {
         final var gameClient = new GameClient(rootUrl, geminiHelper);
@@ -64,14 +57,16 @@ public class Main {
         final var gardenParser = new GardenParser();
         final var newWaterOthersScriptWorker = new NewWaterOthersScriptWorker(gameClient, plantParser);
         final var gardenCollector = new GardenCollector(gameClient, gardenParser);
-        final var newWaterOthersScript = new NewWaterOthersScript(gameClient, newWaterOthersScriptWorker, gardenParser, gardenCollector);
+        final var newWaterOthersScript = new NewWaterOthersScript(gameClient, newWaterOthersScriptWorker,
+                gardenParser, gardenCollector);
         final var newShakeLivesScript = new NewShakeLivesScript(gameClient, plantParser);
         final var newWaterMeScript = new NewWaterMeScript(gameClient, plantParser,
                 Integer.parseInt(config.getConfigParameter("app.water.limit")));
         final var pondParser = new PondParser();
         final var newPondScript = new NewPondScript(gameClient, pondParser);
         final var seenTracker = new SeenTracker(database, "pick.petail");
-        final var newPickPetailsScript = new NewPickPetailsScript(gameClient, gardenParser, gardenCollector, seenTracker);
+        final var newPickPetailsScript = new NewPickPetailsScript(gameClient, gardenParser, gardenCollector,
+                seenTracker);
 
         new DbTimer<NewWaterMeScriptResult>(database, "new.water.script").fire(Instant.now(),
                 newWaterMeScript::invoke, (r, f) -> Instant.now().plus(60, ChronoUnit.MINUTES),
@@ -92,33 +87,6 @@ public class Main {
             seenTracker.refresh();
         }
         newPickPetailsScript.invoke();
-    }
-
-    // todo remove this method and all old code
-    private static void mainWork(DbStore<String, Serializable> database, String rootUrl, GeminiHelper geminiHelper,
-                                 Config config) {
-        final var nextMeWateringAndShake = new NextMeWateringAndShake(database);
-        final var allowedWaterMe = nextMeWateringAndShake.allowed();
-        logger.log(Level.INFO, () -> "Check timer for water me: %s".formatted(allowedWaterMe));
-        if (allowedWaterMe.passed()) {
-            final var plant = new MyPlant(rootUrl, geminiHelper);
-
-            new WaterMeScript().invoke(plant, Integer.parseInt(config.getConfigParameter("app.water.limit")));
-            new ShakeLivesScript().invoke(plant, Boolean.parseBoolean(config.getConfigParameter("app.shake.leaves")));
-            nextMeWateringAndShake.storeNext(Instant.now().plus(30, ChronoUnit.MINUTES));
-        }
-
-        new WaterOthersScript(new NextForeignWatering(database), geminiHelper).invoke(rootUrl,
-                Integer.parseInt(config.getConfigParameter("app.foreign.water.limit")));
-
-        final SeenTracker seenTracker = new SeenTracker(database, "pick.petail");
-        final PetailColor blessedColor = new PondScript(rootUrl, geminiHelper, new PondParser()).invoke();
-        final PetailColor prevBlessedColor = (PetailColor) database.get("blessedColor");
-        if (!blessedColor.equals(prevBlessedColor)) {
-            database.put("blessedColor", blessedColor);
-            seenTracker.refresh();
-        }
-        new PickPetalsScript(rootUrl, geminiHelper, seenTracker).invoke(true);
     }
 
     private void doWorkAndExit(String[] args) {

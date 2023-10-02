@@ -19,7 +19,7 @@ public class NewPickPetailsScript {
     private final SeenTracker seenTracker;
 
     public void invoke() {
-        final var gardenPageState = gardenParser.parse(gameClient.wiltingPlants());
+        final var gardenPageState = gardenParser.parse(gameClient.floweringPlants());
         final Map<String, String> idToStatus = gardenCollector.collectIdToStatus(gardenPageState);
         final AtomicInteger processed = new AtomicInteger();
         idToStatus.keySet().stream()
