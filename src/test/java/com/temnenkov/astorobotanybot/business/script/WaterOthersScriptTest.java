@@ -19,13 +19,13 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class NewWaterOthersScriptTest {
+class WaterOthersScriptTest {
 
-    private NewWaterOthersScript script;
+    private WaterOthersScript script;
     @Mock
     private GameClient gameClient;
     @Mock
-    private NewWaterOthersScriptWorker newWaterOthersScriptWorker;
+    private WaterOthersScriptWorker waterOthersScriptWorker;
     @Mock
     private GardenParser gardenParser;
     @InjectMocks
@@ -33,7 +33,7 @@ class NewWaterOthersScriptTest {
 
     @BeforeEach
     void setUp() {
-        script = new NewWaterOthersScript(gameClient, newWaterOthersScriptWorker, gardenParser, gardenCollector);
+        script = new WaterOthersScript(gameClient, waterOthersScriptWorker, gardenParser, gardenCollector);
     }
 
     @Test
@@ -44,10 +44,10 @@ class NewWaterOthersScriptTest {
                 Map.of("1", "2"), null
         );
         when(gardenParser.parse("1")).thenReturn(gardenPageState);
-        final NewWaterOtherScriptResult.Watered expectedResult = new NewWaterOtherScriptResult.Watered(10, 100);
-        when(newWaterOthersScriptWorker.processGarden(eq(gardenPageState), any())).thenReturn(expectedResult);
+        final WaterOtherScriptResult.Watered expectedResult = new WaterOtherScriptResult.Watered(10, 100);
+        when(waterOthersScriptWorker.processGarden(eq(gardenPageState), any())).thenReturn(expectedResult);
         //when
-        final NewWaterOtherScriptResult result = script.invoke();
+        final WaterOtherScriptResult result = script.invoke();
         //then
         assertEquals(expectedResult, result);
         noOthersInteractions();
@@ -68,17 +68,17 @@ class NewWaterOthersScriptTest {
         );
         when(gardenParser.parse("2")).thenReturn(notEmptyGardenPageState);
 
-        final NewWaterOtherScriptResult.Watered expectedResult = new NewWaterOtherScriptResult.Watered(10, 100);
-        when(newWaterOthersScriptWorker.processGarden(eq(notEmptyGardenPageState), any())).thenReturn(expectedResult);
+        final WaterOtherScriptResult.Watered expectedResult = new WaterOtherScriptResult.Watered(10, 100);
+        when(waterOthersScriptWorker.processGarden(eq(notEmptyGardenPageState), any())).thenReturn(expectedResult);
         //when
-        final NewWaterOtherScriptResult result = script.invoke();
+        final WaterOtherScriptResult result = script.invoke();
         //then
         assertEquals(expectedResult, result);
         noOthersInteractions();
     }
 
     private void noOthersInteractions() {
-        verifyNoMoreInteractions(gameClient, newWaterOthersScriptWorker, gardenParser);
+        verifyNoMoreInteractions(gameClient, waterOthersScriptWorker, gardenParser);
     }
 
 }

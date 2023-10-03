@@ -11,8 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @RequiredArgsConstructor
-public class NewPickPetailsScript {
-    private static final Logger logger = Logger.getLogger("NewPickPetailsScript");
+public class PickPetailsScript {
+    private static final Logger logger = Logger.getLogger("PickPetailsScript");
     private final GameClient gameClient;
     private final GardenParser gardenParser;
     private final GardenCollector gardenCollector;

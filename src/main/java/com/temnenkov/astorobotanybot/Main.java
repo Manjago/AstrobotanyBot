@@ -9,15 +9,15 @@ import com.temnenkov.astorobotanybot.business.parser.PlantParser;
 import com.temnenkov.astorobotanybot.business.parser.PondParser;
 import com.temnenkov.astorobotanybot.business.parser.dto.PetailColor;
 import com.temnenkov.astorobotanybot.business.script.GardenCollector;
-import com.temnenkov.astorobotanybot.business.script.NewPickPetailsScript;
-import com.temnenkov.astorobotanybot.business.script.NewPondScript;
-import com.temnenkov.astorobotanybot.business.script.NewShakeLivesScript;
-import com.temnenkov.astorobotanybot.business.script.NewShakeLivesScriptResult;
-import com.temnenkov.astorobotanybot.business.script.NewWaterMeScript;
-import com.temnenkov.astorobotanybot.business.script.NewWaterMeScriptResult;
-import com.temnenkov.astorobotanybot.business.script.NewWaterOtherScriptResult;
-import com.temnenkov.astorobotanybot.business.script.NewWaterOthersScript;
-import com.temnenkov.astorobotanybot.business.script.NewWaterOthersScriptWorker;
+import com.temnenkov.astorobotanybot.business.script.PickPetailsScript;
+import com.temnenkov.astorobotanybot.business.script.PondScript;
+import com.temnenkov.astorobotanybot.business.script.ShakeLivesScript;
+import com.temnenkov.astorobotanybot.business.script.ShakeLivesScriptResult;
+import com.temnenkov.astorobotanybot.business.script.WaterMeScript;
+import com.temnenkov.astorobotanybot.business.script.WaterMeScriptResult;
+import com.temnenkov.astorobotanybot.business.script.WaterOtherScriptResult;
+import com.temnenkov.astorobotanybot.business.script.WaterOthersScript;
+import com.temnenkov.astorobotanybot.business.script.WaterOthersScriptWorker;
 import com.temnenkov.astorobotanybot.db.DbStore;
 import com.temnenkov.astorobotanybot.protocol.GeminiURLStreamHandlerFactory;
 import com.temnenkov.astorobotanybot.utils.DbTimer;
@@ -49,34 +49,35 @@ public class Main {
         }
     }
 
-    // todo remove ALL old code and rename others
+    // todo make every attempt report
+    // todo make daily report
     private static void newWork(DbStore<String, Serializable> database, String rootUrl, GeminiHelper geminiHelper,
                                 @NotNull Config config) {
         final var gameClient = new GameClient(rootUrl, geminiHelper);
         final var plantParser = new PlantParser();
         final var gardenParser = new GardenParser();
-        final var newWaterOthersScriptWorker = new NewWaterOthersScriptWorker(gameClient, plantParser);
+        final var newWaterOthersScriptWorker = new WaterOthersScriptWorker(gameClient, plantParser);
         final var gardenCollector = new GardenCollector(gameClient, gardenParser);
-        final var newWaterOthersScript = new NewWaterOthersScript(gameClient, newWaterOthersScriptWorker,
+        final var newWaterOthersScript = new WaterOthersScript(gameClient, newWaterOthersScriptWorker,
                 gardenParser, gardenCollector);
-        final var newShakeLivesScript = new NewShakeLivesScript(gameClient, plantParser);
-        final var newWaterMeScript = new NewWaterMeScript(gameClient, plantParser,
+        final var newShakeLivesScript = new ShakeLivesScript(gameClient, plantParser);
+        final var newWaterMeScript = new WaterMeScript(gameClient, plantParser,
                 Integer.parseInt(config.getConfigParameter("app.water.limit")));
         final var pondParser = new PondParser();
-        final var newPondScript = new NewPondScript(gameClient, pondParser);
+        final var newPondScript = new PondScript(gameClient, pondParser);
         final var seenTracker = new SeenTracker(database, "pick.petail");
-        final var newPickPetailsScript = new NewPickPetailsScript(gameClient, gardenParser, gardenCollector,
+        final var newPickPetailsScript = new PickPetailsScript(gameClient, gardenParser, gardenCollector,
                 seenTracker);
 
-        new DbTimer<NewWaterMeScriptResult>(database, "new.water.script").fire(Instant.now(),
+        new DbTimer<WaterMeScriptResult>(database, "new.water.script").fire(Instant.now(),
                 newWaterMeScript::invoke, (r, f) -> Instant.now().plus(60, ChronoUnit.MINUTES),
                 (t, f) -> Instant.now().plus(10, ChronoUnit.MINUTES));
 
-        new DbTimer<NewShakeLivesScriptResult>(database, "new.shake.script").fire(Instant.now(),
+        new DbTimer<ShakeLivesScriptResult>(database, "new.shake.script").fire(Instant.now(),
                 newShakeLivesScript::invoke, (r, f) -> Instant.now().plus(20, ChronoUnit.MINUTES),
                 (t, f) -> Instant.now().plus(5, ChronoUnit.MINUTES));
 
-        new DbTimer<NewWaterOtherScriptResult>(database, "new.water.others.script").fire(Instant.now(),
+        new DbTimer<WaterOtherScriptResult>(database, "new.water.others.script").fire(Instant.now(),
                 newWaterOthersScript::invoke, (r, f) -> Instant.now().plus(31, ChronoUnit.MINUTES),
                 (t, f) -> Instant.now().plus(5, ChronoUnit.MINUTES));
 

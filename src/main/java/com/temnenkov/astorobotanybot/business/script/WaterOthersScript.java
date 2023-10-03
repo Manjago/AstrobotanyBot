@@ -9,22 +9,22 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @RequiredArgsConstructor
-public class NewWaterOthersScript {
-    private static final Logger logger = Logger.getLogger("NewWaterOthersScript");
+public class WaterOthersScript {
+    private static final Logger logger = Logger.getLogger("WaterOthersScript");
     private final GameClient gameClient;
-    private final NewWaterOthersScriptWorker newWaterOthersScriptWorker;
+    private final WaterOthersScriptWorker waterOthersScriptWorker;
     private final GardenParser gardenParser;
     private final GardenCollector gardenCollector;
 
-    public @NotNull NewWaterOtherScriptResult invoke() {
+    public @NotNull WaterOtherScriptResult invoke() {
         final var gardenPageState = gardenParser.parse(gameClient.wiltingPlants());
 
         if (gardenPageState.idToStatus().isEmpty()) {
             logger.log(Level.FINE, () -> "No wilting");
-            return newWaterOthersScriptWorker.processGarden(gardenParser.parse(gameClient.dryPlants()), gardenCollector::collectIdToStatus);
+            return waterOthersScriptWorker.processGarden(gardenParser.parse(gameClient.dryPlants()), gardenCollector::collectIdToStatus);
         } else {
             logger.log(Level.FINE, () -> "Wilting found: %d".formatted(gardenPageState.idToStatus().size()));
-            return newWaterOthersScriptWorker.processGarden(gardenPageState, gardenCollector::collectIdToStatus);
+            return waterOthersScriptWorker.processGarden(gardenPageState, gardenCollector::collectIdToStatus);
         }
     }
 

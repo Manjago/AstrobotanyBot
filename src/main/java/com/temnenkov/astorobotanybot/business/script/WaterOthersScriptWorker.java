@@ -16,9 +16,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @RequiredArgsConstructor
-public class NewWaterOthersScriptWorker {
+public class WaterOthersScriptWorker {
 
-    private static final Logger logger = Logger.getLogger("NewWaterOthersScriptWorker");
+    private static final Logger logger = Logger.getLogger("WaterOthersScriptWorker");
     private final GameClient gameClient;
     private final PlantParser plantParser;
 
@@ -26,19 +26,19 @@ public class NewWaterOthersScriptWorker {
     record IdToStage(String id, PlantStage plantStage) {
     }
     
-    @NotNull NewWaterOtherScriptResult processGarden(@NotNull GardenPageState gardenPageState,
-                                                     @NotNull Function<GardenPageState, Map<String, String>> traverseGarden) {
+    @NotNull WaterOtherScriptResult processGarden(@NotNull GardenPageState gardenPageState,
+                                                  @NotNull Function<GardenPageState, Map<String, String>> traverseGarden) {
         return processGarden(gardenPageState, traverseGarden, this::waterByPriority);
     }
 
-    @NotNull NewWaterOtherScriptResult processGarden(@NotNull GardenPageState gardenPageState,
-                                                     @NotNull Function<GardenPageState, Map<String, String>> traverseGarden,
-                                                     @NotNull Function<List<IdToStage>, NewWaterOtherScriptResult> waterByPriority
+    @NotNull WaterOtherScriptResult processGarden(@NotNull GardenPageState gardenPageState,
+                                                  @NotNull Function<GardenPageState, Map<String, String>> traverseGarden,
+                                                  @NotNull Function<List<IdToStage>, WaterOtherScriptResult> waterByPriority
                                                      ) {
 
         if (gardenPageState.idToStatus().isEmpty()) {
             logger.log(Level.FINE, () -> "No pretenders for %s".formatted(gardenPageState));
-            return NewWaterOtherScriptResult.NoPretenders.INSTANCE;
+            return WaterOtherScriptResult.NoPretenders.INSTANCE;
         }
 
         final Map<String, String> toWater = traverseGarden.apply(gardenPageState);
@@ -52,7 +52,7 @@ public class NewWaterOthersScriptWorker {
     }
 
     @Nullable
-    NewWaterOtherScriptResult waterByPriority(@NotNull List<IdToStage> pretenders) {
+    WaterOtherScriptResult waterByPriority(@NotNull List<IdToStage> pretenders) {
         for (IdToStage pretender : pretenders) {
             final var stateBefore = plantParser.parse(gameClient.plant(pretender.id()));
             logger.log(Level.FINE, () -> "For %s state before %s".formatted(pretender.id(), stateBefore));
@@ -63,12 +63,12 @@ public class NewWaterOthersScriptWorker {
             final var stateAfter = plantParser.parse(gameClient.plant(pretender.id()));
             logger.log(Level.FINE, () -> "For %s state after %s".formatted(pretender.id(), stateBefore));
             if (stateBefore.water() == stateAfter.water()) {
-                return new NewWaterOtherScriptResult.TooEarly(stateBefore, stateAfter);
+                return new WaterOtherScriptResult.TooEarly(stateBefore, stateAfter);
             } else {
-                return new NewWaterOtherScriptResult.Watered(stateBefore.water(), stateAfter.water());
+                return new WaterOtherScriptResult.Watered(stateBefore.water(), stateAfter.water());
             }
         }
-        return NewWaterOtherScriptResult.NoPretenders.INSTANCE;
+        return WaterOtherScriptResult.NoPretenders.INSTANCE;
     }
 
 }

@@ -23,10 +23,10 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class NewWaterOthersScriptWorkerTest {
+class WaterOthersScriptWorkerTest {
 
     @InjectMocks
-    private NewWaterOthersScriptWorker worker;
+    private WaterOthersScriptWorker worker;
     @Mock
     private GameClient gameClient;
     @Mock
@@ -39,9 +39,9 @@ class NewWaterOthersScriptWorkerTest {
         final var gardenPageState = new GardenPageState(Map.of(), null);
         final Function<GardenPageState, Map<String, String>> dummy = s -> Map.of();
         //when
-        final NewWaterOtherScriptResult result = worker.processGarden(gardenPageState, dummy);
+        final WaterOtherScriptResult result = worker.processGarden(gardenPageState, dummy);
         //then
-        assertEquals(NewWaterOtherScriptResult.NoPretenders.INSTANCE, result);
+        assertEquals(WaterOtherScriptResult.NoPretenders.INSTANCE, result);
         noOthersInteractions();
     }
 
@@ -51,16 +51,16 @@ class NewWaterOthersScriptWorkerTest {
         final var gardenPageState = new GardenPageState(Map.of("1", "mature " + "1", "2", "seed 2", "3",
                 "flowering " + "3"), null);
         //when
-        final NewWaterOtherScriptResult result = worker.processGarden(gardenPageState, GardenPageState::idToStatus,
+        final WaterOtherScriptResult result = worker.processGarden(gardenPageState, GardenPageState::idToStatus,
                 l -> {
             if (l.get(0).plantStage() == PlantStage.FLOWERING) {
-                return new NewWaterOtherScriptResult.Watered(10, 100);
+                return new WaterOtherScriptResult.Watered(10, 100);
             } else {
-                return NewWaterOtherScriptResult.NoPretenders.INSTANCE;
+                return WaterOtherScriptResult.NoPretenders.INSTANCE;
             }
         });
         //then
-        assertEquals(new NewWaterOtherScriptResult.Watered(10, 100), result);
+        assertEquals(new WaterOtherScriptResult.Watered(10, 100), result);
     }
 
     @Test
@@ -68,10 +68,10 @@ class NewWaterOthersScriptWorkerTest {
         // 4 plants, 1 with fence, 2 with 100 water, 3 - water 50
         // we should be pick plant 3
         //given
-        final List<NewWaterOthersScriptWorker.IdToStage> data = List.of(new NewWaterOthersScriptWorker.IdToStage("1",
-                PlantStage.FLOWERING), new NewWaterOthersScriptWorker.IdToStage("2", PlantStage.FLOWERING),
-                new NewWaterOthersScriptWorker.IdToStage("3", PlantStage.FLOWERING),
-                new NewWaterOthersScriptWorker.IdToStage("4", PlantStage.FLOWERING));
+        final List<WaterOthersScriptWorker.IdToStage> data = List.of(new WaterOthersScriptWorker.IdToStage("1",
+                PlantStage.FLOWERING), new WaterOthersScriptWorker.IdToStage("2", PlantStage.FLOWERING),
+                new WaterOthersScriptWorker.IdToStage("3", PlantStage.FLOWERING),
+                new WaterOthersScriptWorker.IdToStage("4", PlantStage.FLOWERING));
 
         when(gameClient.plant("1")).thenReturn("1-");
         when(gameClient.plant("2")).thenReturn("2-");
@@ -84,9 +84,9 @@ class NewWaterOthersScriptWorkerTest {
                 0), new PlantState(100, PlantStage.FLOWERING, false, true, true, false, 0));
 
         //when
-        final NewWaterOtherScriptResult result = worker.waterByPriority(data);
+        final WaterOtherScriptResult result = worker.waterByPriority(data);
         //then
-        assertEquals(new NewWaterOtherScriptResult.Watered(50, 100), result);
+        assertEquals(new WaterOtherScriptResult.Watered(50, 100), result);
         verify(gameClient, times(1)).waterPlant("3");
         noOthersInteractions();
     }
@@ -96,10 +96,10 @@ class NewWaterOthersScriptWorkerTest {
         // 4 plants, 1 with fence, 2 with 100 water, 3 - water 50, but too early
         // we should be pick plant 3
         //given
-        final List<NewWaterOthersScriptWorker.IdToStage> data = List.of(new NewWaterOthersScriptWorker.IdToStage("1",
-                PlantStage.FLOWERING), new NewWaterOthersScriptWorker.IdToStage("2", PlantStage.FLOWERING),
-                new NewWaterOthersScriptWorker.IdToStage("3", PlantStage.FLOWERING),
-                new NewWaterOthersScriptWorker.IdToStage("4", PlantStage.FLOWERING));
+        final List<WaterOthersScriptWorker.IdToStage> data = List.of(new WaterOthersScriptWorker.IdToStage("1",
+                PlantStage.FLOWERING), new WaterOthersScriptWorker.IdToStage("2", PlantStage.FLOWERING),
+                new WaterOthersScriptWorker.IdToStage("3", PlantStage.FLOWERING),
+                new WaterOthersScriptWorker.IdToStage("4", PlantStage.FLOWERING));
 
         when(gameClient.plant("1")).thenReturn("1-");
         when(gameClient.plant("2")).thenReturn("2-");
@@ -114,9 +114,9 @@ class NewWaterOthersScriptWorkerTest {
         when(plantParser.parse("3-")).thenReturn(stateBefore, ststeAfter);
 
         //when
-        final NewWaterOtherScriptResult result = worker.waterByPriority(data);
+        final WaterOtherScriptResult result = worker.waterByPriority(data);
         //then
-        assertEquals(new NewWaterOtherScriptResult.TooEarly(stateBefore, ststeAfter), result);
+        assertEquals(new WaterOtherScriptResult.TooEarly(stateBefore, ststeAfter), result);
         verify(gameClient, times(1)).waterPlant("3");
         noOthersInteractions();
     }
@@ -126,8 +126,8 @@ class NewWaterOthersScriptWorkerTest {
         // 2 plants, 1 with fence, 2 with 100 water
         // no pretenders
         //given
-        final List<NewWaterOthersScriptWorker.IdToStage> data = List.of(new NewWaterOthersScriptWorker.IdToStage("1",
-                PlantStage.FLOWERING), new NewWaterOthersScriptWorker.IdToStage("2", PlantStage.FLOWERING));
+        final List<WaterOthersScriptWorker.IdToStage> data = List.of(new WaterOthersScriptWorker.IdToStage("1",
+                PlantStage.FLOWERING), new WaterOthersScriptWorker.IdToStage("2", PlantStage.FLOWERING));
 
         when(gameClient.plant("1")).thenReturn("1-");
         when(gameClient.plant("2")).thenReturn("2-");
@@ -137,9 +137,9 @@ class NewWaterOthersScriptWorkerTest {
                 0));
 
         //when
-        final NewWaterOtherScriptResult result = worker.waterByPriority(data);
+        final WaterOtherScriptResult result = worker.waterByPriority(data);
         //then
-        assertEquals(NewWaterOtherScriptResult.NoPretenders.INSTANCE, result);
+        assertEquals(WaterOtherScriptResult.NoPretenders.INSTANCE, result);
         noOthersInteractions();
     }
 
