@@ -41,7 +41,7 @@ public class Main {
     public static void main(String[] args) {
 
         try {
-            new Main().doWorkAndExit(args);
+            doWorkAndExit(args);
         } catch (InitException e) {
             logger.log(Level.SEVERE, () -> "Death on start: %s".formatted(e.getMessage()));
         } catch (Exception e) {
@@ -90,7 +90,8 @@ public class Main {
         newPickPetailsScript.invoke();
     }
 
-    private void doWorkAndExit(String[] args) {
+    private static void doWorkAndExit(String[] args) {
+
         logger.log(Level.INFO, "--- 1.1.0-SNAPSHOT ---");
         final FileLock preventGC = checkSecondInstance();
         logger.log(Level.INFO, () -> "Obtain lock %s".formatted(preventGC));
@@ -119,7 +120,7 @@ public class Main {
         logger.log(Level.INFO, () -> "Exit, released lock %s".formatted(preventGC));
     }
 
-    private void initTLS(@NotNull Config config) {
+    private static void initTLS(@NotNull Config config) {
         final String pfxPath = config.getProperty("auth.pfx.path");
         if (pfxPath == null) {
             throw new InitException("auth.pfx.path not defined");
@@ -145,7 +146,7 @@ public class Main {
     }
 
     @NotNull
-    private Config getConfig(String @NotNull [] args) {
+    private static Config getConfig(String @NotNull [] args) {
         if (args.length < 1) {
             throw new InitException("Need properties file in argument");
         }
@@ -155,7 +156,7 @@ public class Main {
         return config;
     }
 
-    private @NotNull FileLock checkSecondInstance() {
+    private static @NotNull FileLock checkSecondInstance() {
         final String userHome = System.getProperty("user.home");
         final File file = new File(userHome, "astrobotanybot.lock");
         try {
