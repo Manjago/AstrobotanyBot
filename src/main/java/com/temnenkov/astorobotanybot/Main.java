@@ -24,7 +24,6 @@ import com.temnenkov.astorobotanybot.utils.DbTimer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.nio.channels.FileChannel;
@@ -41,7 +40,15 @@ public class Main {
     public static void main(String[] args) {
 
         try {
-            doWorkAndExit(args);
+            final File file = new File(System.getProperty("user.home"), "astrobotanybot.lock");
+            file.deleteOnExit();
+            FileChannel fc = FileChannel.open(file.toPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+            try (FileLock lock = fc.tryLock()) {
+                if (lock == null) {
+                    throw new InitException("another instance is running");
+                }
+                doWorkAndExit(args);
+            }
         } catch (InitException e) {
             logger.log(Level.SEVERE, () -> "Death on start: %s".formatted(e.getMessage()));
         } catch (Exception e) {
@@ -58,20 +65,19 @@ public class Main {
         final var gardenParser = new GardenParser();
         final var newWaterOthersScriptWorker = new WaterOthersScriptWorker(gameClient, plantParser);
         final var gardenCollector = new GardenCollector(gameClient, gardenParser);
-        final var newWaterOthersScript = new WaterOthersScript(gameClient, newWaterOthersScriptWorker,
-                gardenParser, gardenCollector);
+        final var newWaterOthersScript = new WaterOthersScript(gameClient, newWaterOthersScriptWorker, gardenParser,
+                gardenCollector);
         final var newShakeLivesScript = new ShakeLivesScript(gameClient, plantParser);
         final var newWaterMeScript = new WaterMeScript(gameClient, plantParser,
                 Integer.parseInt(config.getConfigParameter("app.water.limit")));
         final var pondParser = new PondParser();
         final var newPondScript = new PondScript(gameClient, pondParser);
         final var seenTracker = new SeenTracker(database, "pick.petail");
-        final var newPickPetailsScript = new PickPetailsScript(gameClient, gardenParser, gardenCollector,
-                seenTracker);
+        final var newPickPetailsScript = new PickPetailsScript(gameClient, gardenParser, gardenCollector, seenTracker);
 
-        new DbTimer<WaterMeScriptResult>(database, "new.water.script").fire(Instant.now(),
-                newWaterMeScript::invoke, (r, f) -> Instant.now().plus(60, ChronoUnit.MINUTES),
-                (t, f) -> Instant.now().plus(10, ChronoUnit.MINUTES));
+        new DbTimer<WaterMeScriptResult>(database, "new.water.script").fire(Instant.now(), newWaterMeScript::invoke,
+                (r, f) -> Instant.now().plus(60, ChronoUnit.MINUTES), (t, f) -> Instant.now().plus(10,
+                        ChronoUnit.MINUTES));
 
         new DbTimer<ShakeLivesScriptResult>(database, "new.shake.script").fire(Instant.now(),
                 newShakeLivesScript::invoke, (r, f) -> Instant.now().plus(20, ChronoUnit.MINUTES),
@@ -93,8 +99,6 @@ public class Main {
     private static void doWorkAndExit(String[] args) {
 
         logger.log(Level.INFO, "--- 1.1.0-SNAPSHOT ---");
-        final FileLock preventGC = checkSecondInstance();
-        logger.log(Level.INFO, () -> "Obtain lock %s".formatted(preventGC));
 
         final Config config = getConfig(args);
 
@@ -115,9 +119,6 @@ public class Main {
 
         //mainWork(database, rootUrl, geminiHelper, config);
         newWork(database, rootUrl, geminiHelper, config);
-
-        // to prevent garbage collection - still use
-        logger.log(Level.INFO, () -> "Exit, released lock %s".formatted(preventGC));
     }
 
     private static void initTLS(@NotNull Config config) {
@@ -154,22 +155,6 @@ public class Main {
         final var config = new Config();
         config.load(args[0]);
         return config;
-    }
-
-    private static @NotNull FileLock checkSecondInstance() {
-        final String userHome = System.getProperty("user.home");
-        final File file = new File(userHome, "astrobotanybot.lock");
-        try {
-            FileChannel fc = FileChannel.open(file.toPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-            FileLock lock = fc.tryLock();
-            if (lock == null) {
-                throw new InitException("another instance is running");
-            }
-            file.deleteOnExit();
-            return lock;
-        } catch (IOException e) {
-            throw new InitException("Fail check running instances");
-        }
     }
 
 }
