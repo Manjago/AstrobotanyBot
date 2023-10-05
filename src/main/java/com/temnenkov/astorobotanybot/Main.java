@@ -38,7 +38,16 @@ public class Main {
     private static final Logger logger = Logger.getLogger("Main");
 
     public static void main(String[] args) {
+        lock(new Runnable() {
+            @Override
+            public void run() {
+                final Config config = getConfig(args);
+                workWithConfig(config);
+            }
+        });
+    }
 
+    private static void lock(Runnable action) {
         try {
             final File file = new File(System.getProperty("user.home"), "astrobotanybot.lock");
             file.deleteOnExit();
@@ -47,7 +56,7 @@ public class Main {
                 if (lock == null) {
                     throw new InitException("another instance is running");
                 }
-                doWorkAndExit(args);
+                action.run();
             }
         } catch (InitException e) {
             logger.log(Level.SEVERE, () -> "Death on start: %s".formatted(e.getMessage()));
@@ -56,10 +65,30 @@ public class Main {
         }
     }
 
+    private static void workWithConfig(@NotNull Config config) {
+
+        final DbStore<String, Serializable> database =
+                new DbStore<>(new File(config.getConfigParameter("app.db.file")));
+        final var nextCompress = new NextCompress(database);
+        final var allowed = nextCompress.allowed();
+        logger.log(Level.INFO, () -> "Check timer for compress: %s".formatted(allowed));
+        if (allowed.passed()) {
+            database.compress();
+            nextCompress.storeNext(Instant.now().plus(1, ChronoUnit.DAYS));
+        }
+
+        initTLS(config);
+        final GeminiHelper geminiHelper = new GeminiHelper();
+
+        final String rootUrl = config.getConfigParameter("root.url");
+
+        mainWork(database, rootUrl, geminiHelper, config);
+    }
+
     // todo make every attempt report
     // todo make daily report
-    private static void newWork(DbStore<String, Serializable> database, String rootUrl, GeminiHelper geminiHelper,
-                                @NotNull Config config) {
+    private static void mainWork(DbStore<String, Serializable> database, String rootUrl, GeminiHelper geminiHelper,
+                                 @NotNull Config config) {
         final var gameClient = new GameClient(rootUrl, geminiHelper);
         final var plantParser = new PlantParser();
         final var gardenParser = new GardenParser();
@@ -96,30 +125,6 @@ public class Main {
         newPickPetailsScript.invoke();
     }
 
-    private static void doWorkAndExit(String[] args) {
-
-        logger.log(Level.INFO, "--- 1.1.0-SNAPSHOT ---");
-
-        final Config config = getConfig(args);
-
-        final DbStore<String, Serializable> database =
-                new DbStore<>(new File(config.getConfigParameter("app.db.file")));
-        final var nextCompress = new NextCompress(database);
-        final var allowed = nextCompress.allowed();
-        logger.log(Level.INFO, () -> "Check timer for compress: %s".formatted(allowed));
-        if (allowed.passed()) {
-            database.compress();
-            nextCompress.storeNext(Instant.now().plus(1, ChronoUnit.DAYS));
-        }
-
-        initTLS(config);
-        final GeminiHelper geminiHelper = new GeminiHelper();
-
-        final String rootUrl = config.getConfigParameter("root.url");
-
-        //mainWork(database, rootUrl, geminiHelper, config);
-        newWork(database, rootUrl, geminiHelper, config);
-    }
 
     private static void initTLS(@NotNull Config config) {
         final String pfxPath = config.getProperty("auth.pfx.path");
