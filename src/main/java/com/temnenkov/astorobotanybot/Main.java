@@ -82,13 +82,13 @@ public class Main {
 
         final String rootUrl = config.getConfigParameter("root.url");
 
-        mainWork(database, rootUrl, geminiHelper, config);
+        mainWork(database, rootUrl, geminiHelper, config, Integer.parseInt(config.getConfigParameter("app.water.limit")));
     }
 
     // todo make every attempt report
     // todo make daily report
     private static void mainWork(DbStore<String, Serializable> database, String rootUrl, GeminiHelper geminiHelper,
-                                 @NotNull Config config) {
+                                 @NotNull Config config, int appWaterLimit) {
         final var gameClient = new GameClient(rootUrl, geminiHelper);
         final var plantParser = new PlantParser();
         final var gardenParser = new GardenParser();
@@ -98,7 +98,7 @@ public class Main {
                 gardenCollector);
         final var newShakeLivesScript = new ShakeLivesScript(gameClient, plantParser);
         final var newWaterMeScript = new WaterMeScript(gameClient, plantParser,
-                Integer.parseInt(config.getConfigParameter("app.water.limit")));
+                appWaterLimit);
         final var pondParser = new PondParser();
         final var newPondScript = new PondScript(gameClient, pondParser);
         final var seenTracker = new SeenTracker(database, "pick.petail");
