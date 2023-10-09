@@ -78,17 +78,17 @@ public class Main {
         }
 
         initTLS(config);
-        final GeminiHelper geminiHelper = new GeminiHelper();
 
         final String rootUrl = config.getConfigParameter("root.url");
 
-        mainWork(database, rootUrl, geminiHelper, config, Integer.parseInt(config.getConfigParameter("app.water.limit")));
+        mainWork(database, rootUrl, Integer.parseInt(config.getConfigParameter("app.water.limit")));
     }
 
     // todo make every attempt report
     // todo make daily report
-    private static void mainWork(DbStore<String, Serializable> database, String rootUrl, GeminiHelper geminiHelper,
-                                 @NotNull Config config, int appWaterLimit) {
+    private static void mainWork(DbStore<String, Serializable> database, String rootUrl,
+                                 int appWaterLimit) {
+        final var geminiHelper = new GeminiHelper();
         final var gameClient = new GameClient(rootUrl, geminiHelper);
         final var plantParser = new PlantParser();
         final var gardenParser = new GardenParser();
